@@ -1,3 +1,4 @@
+```markdown
 # ODS Mogi das Cruzes
 
 Sistema de votação da 1ª Conferência Nacional ODS — Etapa Livre  
@@ -38,6 +39,29 @@ Visualização interativa: cole o conteúdo em https://editor.swagger.io
 
 ---
 
+## Banco de dados local
+
+O banco MySQL roda via Docker. Na raiz do repo:
+
+```bash
+cp .env.example .env     # ajustar credenciais se necessário
+docker-compose up -d     # sobe MySQL em localhost:3306
+docker-compose down      # para o banco
+```
+
+---
+
+## Documentação da API (Swagger UI local)
+
+```bash
+cd backend/docs
+docker-compose up -d     # sobe Swagger UI em http://localhost:8080
+```
+
+Ou cole o conteúdo de `ods_api_contract.yaml` em https://editor.swagger.io
+
+---
+
 ## Decisões de infraestrutura
 
 - **Deploy:** Vercel (frontend) + Railway (backend)
@@ -45,3 +69,4 @@ Visualização interativa: cole o conteúdo em https://editor.swagger.io
 - **Monorepo:** pnpm workspaces — cada serviço aponta pra sua subpasta
 
 Cada subgrupo é responsável por configurar sua stack internamente.
+```
