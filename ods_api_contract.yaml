@@ -1,0 +1,533 @@
+openapi: 3.0.3
+
+info:
+  title: ODS Mogi das Cruzes — API
+  description: >
+    API do sistema de votação da 1ª Conferência Nacional ODS — Etapa Livre,
+    realizada na Fatec Mogi das Cruzes nos dias 28/03 e 04/04/2026.
+  version: 1.0.0
+
+servers:
+  - url: https://api.ods-mogi.railway.app
+    description: Produção (Railway)
+  - url: http://localhost:3000
+    description: Desenvolvimento local
+
+tags:
+  - name: Sessão
+    description: Check-in e cadastro de participantes
+  - name: Votação
+    description: Registro de votos por eixo
+  - name: Conteúdo
+    description: Eixos e propostas disponíveis para votação
+  - name: Dashboard
+    description: Resultados em tempo real
+
+# ─────────────────────────────────────────────
+# PATHS
+# ─────────────────────────────────────────────
+paths:
+
+  # ── SESSÃO ──────────────────────────────────
+
+  /sessao/checkin:
+    post:
+      tags: [Sessão]
+      summary: Check-in de participante pré-cadastrado
+      description: >
+        Busca o participante pelo e-mail no banco. Retorna os dados do participante
+        se encontrado, para confirmação antes de redirecionar à votação.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: maria.silva@email.com
+      responses:
+        '200':
+          description: Participante encontrado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  participante:
+                    $ref: '#/components/schemas/ParticipanteResumo'
+                  sessao_token:
+                    type: string
+                    description: Token de sessão para uso nas próximas requisições
+                    example: eyJhbGciOiJIUzI1NiJ9...
+        '404':
+          description: Participante não encontrado — redirecionar para cadastro
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: participante_nao_encontrado
+                mensagem: Nenhum participante encontrado com este e-mail.
+        '429':
+          $ref: '#/components/responses/RateLimit'
+
+  /sessao/cadastro:
+    post:
+      tags: [Sessão]
+      summary: Cadastro completo de novo participante
+      description: >
+        Registra um novo participante no banco. Retorna o token de sessão
+        para seguir direto para a votação.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CadastroInput'
+      responses:
+        '201':
+          description: Participante cadastrado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  participante:
+                    $ref: '#/components/schemas/ParticipanteResumo'
+                  sessao_token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiJ9...
+        '409':
+          description: E-mail já cadastrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: email_duplicado
+                mensagem: Este e-mail já está cadastrado. Faça check-in.
+        '422':
+          $ref: '#/components/responses/ValidacaoError'
+        '429':
+          $ref: '#/components/responses/RateLimit'
+
+  /sessao/nova:
+    post:
+      tags: [Sessão]
+      summary: Encerra a sessão atual (instrutor)
+      description: >
+        Invalida o token de sessão atual. Chamado pelo instrutor ao clicar
+        em "Nova sessão" na tela de confirmação.
+      security:
+        - sessaoToken: []
+      responses:
+        '200':
+          description: Sessão encerrada
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: Sessão encerrada com sucesso.
+        '401':
+          $ref: '#/components/responses/NaoAutorizado'
+
+  # ── VOTAÇÃO ─────────────────────────────────
+
+  /votacao:
+    post:
+      tags: [Votação]
+      summary: Registra os votos e envia o certificado
+      description: >
+        Recebe os votos de todos os 4 eixos de uma vez, persiste no banco,
+        gera o certificado PDF e envia por e-mail. Chamado ao confirmar
+        o e-mail no modal de revisão.
+      security:
+        - sessaoToken: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [votos]
+              properties:
+                votos:
+                  type: array
+                  minItems: 4
+                  maxItems: 4
+                  items:
+                    type: object
+                    required: [eixo_id, proposta_id]
+                    properties:
+                      eixo_id:
+                        type: integer
+                        example: 1
+                      proposta_id:
+                        type: integer
+                        example: 3
+                  example:
+                    - eixo_id: 1
+                      proposta_id: 2
+                    - eixo_id: 2
+                      proposta_id: 5
+                    - eixo_id: 4
+                      proposta_id: 8
+                    - eixo_id: 5
+                      proposta_id: 11
+      responses:
+        '200':
+          description: Votos registrados e certificado enviado
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mensagem:
+                    type: string
+                    example: Votação concluída. Certificado enviado para maria.silva@email.com.
+                  email_enviado_para:
+                    type: string
+                    format: email
+                    example: maria.silva@email.com
+        '400':
+          description: Votos incompletos ou eixo duplicado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: votos_invalidos
+                mensagem: É necessário votar em exatamente 1 proposta por eixo.
+        '409':
+          description: Participante já votou
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: voto_duplicado
+                mensagem: Este participante já registrou votos nesta conferência.
+        '401':
+          $ref: '#/components/responses/NaoAutorizado'
+        '429':
+          $ref: '#/components/responses/RateLimit'
+
+  # ── CONTEÚDO ────────────────────────────────
+
+  /eixos:
+    get:
+      tags: [Conteúdo]
+      summary: Lista todos os eixos com suas propostas
+      description: >
+        Retorna os 4 eixos ODS com todas as propostas vinculadas.
+        Usado pela tela de votação para montar as opções.
+      responses:
+        '200':
+          description: Lista de eixos com propostas
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  eixos:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Eixo'
+              example:
+                eixos:
+                  - id: 1
+                    nome: Democracia e instituições fortes
+                    descricao: Fortalecimento das instituições democráticas e participação cidadã.
+                    propostas:
+                      - id: 1
+                        titulo: Conselhos municipais digitais
+                        descricao: Plataformas abertas para participação nos conselhos.
+                      - id: 2
+                        titulo: Educação política nas escolas
+                        descricao: Programas de educação cívica integrados ao currículo.
+
+  # ── DASHBOARD ───────────────────────────────
+
+  /dashboard:
+    get:
+      tags: [Dashboard]
+      summary: Resultados em tempo real
+      description: >
+        Retorna o total de participantes, total de votos, e a contagem
+        de votos por proposta agrupada por eixo.
+      responses:
+        '200':
+          description: Dados do dashboard
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DashboardData'
+              example:
+                total_participantes: 247
+                total_votos: 988
+                eixos:
+                  - id: 1
+                    nome: Democracia e instituições fortes
+                    propostas:
+                      - id: 1
+                        titulo: Conselhos municipais digitais
+                        votos: 98
+                      - id: 2
+                        titulo: Educação política nas escolas
+                        votos: 82
+                  - id: 2
+                    nome: Sustentabilidade ambiental
+                    propostas:
+                      - id: 3
+                        titulo: Recuperação de matas ciliares
+                        votos: 112
+                      - id: 4
+                        titulo: Energia solar em equipamentos públicos
+                        votos: 79
+
+# ─────────────────────────────────────────────
+# COMPONENTS
+# ─────────────────────────────────────────────
+components:
+
+  securitySchemes:
+    sessaoToken:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Token retornado no check-in ou cadastro. Enviado no header Authorization.
+
+  responses:
+    NaoAutorizado:
+      description: Token de sessão ausente ou inválido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: nao_autorizado
+            mensagem: Token de sessão inválido ou expirado.
+
+    RateLimit:
+      description: Muitas requisições — rate limit atingido
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Erro'
+          example:
+            erro: rate_limit
+            mensagem: Muitas requisições. Aguarde alguns segundos.
+
+    ValidacaoError:
+      description: Dados inválidos ou campos obrigatórios ausentes
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              erro:
+                type: string
+                example: validacao
+              campos:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    campo:
+                      type: string
+                    mensagem:
+                      type: string
+                example:
+                  - campo: email
+                    mensagem: E-mail inválido.
+                  - campo: par_nome
+                    mensagem: Nome completo é obrigatório.
+
+  schemas:
+
+    Erro:
+      type: object
+      properties:
+        erro:
+          type: string
+        mensagem:
+          type: string
+
+    ParticipanteResumo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 42
+        nome:
+          type: string
+          example: Maria Silva
+        email:
+          type: string
+          format: email
+          example: maria.silva@email.com
+        tipo_participante:
+          type: string
+          example: Participante Externo
+
+    CadastroInput:
+      type: object
+      required:
+        - nome
+        - email
+        - telefone
+        - data_conferencia
+        - identidade_genero_id
+        - orientacao_sexual_id
+        - raca_cor_id
+        - cidade_id
+        - regiao_id
+        - ocupacao
+        - tipo_participante_id
+        - areas_formacao_ids
+        - eixos_interesse_ids
+        - autorizacao_imagem
+      properties:
+        nome:
+          type: string
+          example: Maria Silva
+        email:
+          type: string
+          format: email
+          example: maria.silva@email.com
+        telefone:
+          type: string
+          pattern: '^\d{11}$'
+          example: "11999998888"
+        data_conferencia:
+          type: string
+          format: date
+          enum: ["2026-03-28", "2026-04-04"]
+          example: "2026-03-28"
+        identidade_genero_id:
+          type: integer
+          example: 1
+        orientacao_sexual_id:
+          type: integer
+          example: 3
+        raca_cor_id:
+          type: integer
+          example: 2
+        cidade_id:
+          type: integer
+          example: 9
+        regiao_id:
+          type: integer
+          example: 2
+        pertence_cadeia_produtiva:
+          type: boolean
+          example: false
+        cadeias_produtivas_ids:
+          type: array
+          items:
+            type: integer
+          example: []
+        instituicao_id:
+          type: integer
+          example: 1
+        instituicao_outro:
+          type: string
+          nullable: true
+          example: null
+        areas_formacao_ids:
+          type: array
+          items:
+            type: integer
+          example: [8, 9]
+        ocupacao:
+          type: string
+          example: Professora
+        publicos_fatec_ids:
+          type: array
+          items:
+            type: integer
+          description: Opcional — só preencher se tiver vínculo com a Fatec
+          example: []
+        tipo_participante_id:
+          type: integer
+          example: 1
+        possui_deficiencia:
+          type: boolean
+          example: false
+        deficiencias_ids:
+          type: array
+          items:
+            type: integer
+          example: []
+        recurso_acessibilidade:
+          type: string
+          nullable: true
+          example: null
+        eixos_interesse_ids:
+          type: array
+          items:
+            type: integer
+          example: [1, 2]
+        autorizacao_imagem:
+          type: boolean
+          enum: [true]
+          example: true
+
+    Eixo:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+        descricao:
+          type: string
+        propostas:
+          type: array
+          items:
+            $ref: '#/components/schemas/Proposta'
+
+    Proposta:
+      type: object
+      properties:
+        id:
+          type: integer
+        titulo:
+          type: string
+        descricao:
+          type: string
+
+    DashboardData:
+      type: object
+      properties:
+        total_participantes:
+          type: integer
+        total_votos:
+          type: integer
+        eixos:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: integer
+              nome:
+                type: string
+              propostas:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    titulo:
+                      type: string
+                    votos:
+                      type: integer
