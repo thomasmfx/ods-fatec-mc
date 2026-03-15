@@ -67,6 +67,18 @@ pnpm --parallel -r dev
 
 ---
 
+## Workflow
+
+- A branch principal de desenvolvimento é `dev` — push direto permitido
+- `main` é reservada para produção — **nunca fazer push direto**
+- Quando o sistema estiver pronto, abrir um PR de `dev` → `main` para deploy
+```
+dev    → desenvolvimento diário
+main   → produção (dispara deploy automático no Vercel e Railway)
+```
+
+---
+
 ## Infraestrutura
 
 - **Monorepo:** pnpm workspaces — cada serviço aponta pra sua subpasta
