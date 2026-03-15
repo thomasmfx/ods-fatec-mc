@@ -1,4 +1,3 @@
-```markdown
 # ODS Mogi das Cruzes
 
 Sistema de votação da 1ª Conferência Nacional ODS — Etapa Livre  
@@ -7,11 +6,10 @@ Fatec Mogi das Cruzes · 28/03 e 04/04/2026
 ---
 
 ## Estrutura
-
 ```
 /
-├── frontend/               # Subgrupo frontend
-├── backend/                # Subgrupo backend
+├── frontend/
+├── backend/
 ├── ods_api_contract.yaml   # Contrato OpenAPI 3.0 — fonte da verdade da API
 ├── pnpm-workspace.yaml
 └── package.json
@@ -21,8 +19,7 @@ Fatec Mogi das Cruzes · 28/03 e 04/04/2026
 
 ## Contrato de API
 
-O arquivo `ods_api_contract.yaml` define todos os endpoints, parâmetros e respostas.  
-**Nenhum dos dois subgrupos deve começar a integrar sem ler este arquivo.**
+O arquivo `ods_api_contract.yaml` define todos os endpoints, parâmetros e respostas.
 
 Visualização interativa: cole o conteúdo em https://editor.swagger.io
 
@@ -39,34 +36,41 @@ Visualização interativa: cole o conteúdo em https://editor.swagger.io
 
 ---
 
-## Banco de dados local
+## Banco de dados local + Documentação da API (Swagger UI local)
 
-O banco MySQL roda via Docker. Na raiz do repo:
-
+O banco MySQL e a documentação do contrato da API rodam via Docker. Na raiz do repo:
 ```bash
-cp .env.example .env     # ajustar credenciais se necessário
-docker-compose up -d     # sobe MySQL em localhost:3306
-docker-compose down      # para o banco
+docker-compose up -d     # sobe MySQL em localhost:3306 e Swagger UI em localhost:8080
+```
+
+Outra opção para visualizar o contrato da API é colar o conteúdo de `ods_api_contract.yaml` em https://editor.swagger.io
+
+---
+
+## Desenvolvimento
+
+Instalar dependências:
+```bash
+pnpm install
+```
+
+Rodar cada subgrupo separadamente:
+```bash
+pnpm --filter frontend dev   # só o frontend
+pnpm --filter backend dev    # só o backend
+```
+
+Rodar os dois juntos (integração):
+```bash
+pnpm --parallel -r dev
 ```
 
 ---
 
-## Documentação da API (Swagger UI local)
+## Infraestrutura
 
-```bash
-cd backend/docs
-docker-compose up -d     # sobe Swagger UI em http://localhost:8080
-```
-
-Ou cole o conteúdo de `ods_api_contract.yaml` em https://editor.swagger.io
-
----
-
-## Decisões de infraestrutura
-
-- **Deploy:** Vercel (frontend) + Railway (backend)
-- **Banco:** MySQL
 - **Monorepo:** pnpm workspaces — cada serviço aponta pra sua subpasta
-
-Cada subgrupo é responsável por configurar sua stack internamente.
-```
+- **Frontend:** *a decidir*
+- **Backend:** *a decidir*
+- **Banco:** MySQL
+- **Deploy:** Vercel (frontend) + Railway (backend)
