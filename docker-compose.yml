@@ -21,6 +21,7 @@ services:
       - "3306:3306"
     volumes:
       - ods_db_data:/var/lib/mysql
+      - ./scripts/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
 volumes:
   ods_db_data:

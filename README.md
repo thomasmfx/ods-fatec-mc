@@ -36,11 +36,21 @@ Visualização interativa: cole o conteúdo em https://editor.swagger.io
 
 ---
 
+Sim, vale adicionar uma observação na seção do banco explicando o comportamento do init e como resetar:
+
 ## Banco de dados local + Documentação da API (Swagger UI local)
 
 O banco MySQL e a documentação do contrato da API rodam via Docker. Na raiz do repo:
+
 ```bash
 docker-compose up -d     # sobe MySQL em localhost:3306 e Swagger UI em localhost:8080
+```
+
+Na primeira inicialização, o script `scripts/init.sql` é executado automaticamente e as tabelas são criadas. Para resetar o banco do zero:
+
+```bash
+docker-compose down -v   # remove os dados
+docker-compose up -d     # sobe novamente com o script
 ```
 
 Outra opção para visualizar o contrato da API é colar o conteúdo de `ods_api_contract.yaml` em https://editor.swagger.io
