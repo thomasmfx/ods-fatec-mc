@@ -10,18 +10,36 @@ Fatec Mogi das Cruzes · 28/03 e 04/04/2026
 /
 ├── frontend/
 ├── backend/
-├── ods_api_contract.yaml   # Contrato OpenAPI 3.0 — fonte da verdade da API
-├── pnpm-workspace.yaml
-└── package.json
+├── db/
+│   └── init.sql
+├── ods_api_contract.yaml
+├── docker-compose.yml
+└── .env.example
 ```
+
+---
+
+## Stacks
+
+| Subgrupo | Tecnologias |
+|---|---|
+| Frontend | React + JavaScript + CSS Modules |
+| Backend | Java + Spring Boot + MySQL |
 
 ---
 
 ## Contrato de API
 
-O arquivo `ods_api_contract.yaml` define todos os endpoints, parâmetros e respostas.
+O arquivo `ods_api_contract.yaml` define todos os endpoints, parâmetros e respostas.  
+**Nenhum dos dois subgrupos deve começar a integrar sem ler este arquivo.**
 
-Visualização interativa: cole o conteúdo em https://editor.swagger.io
+Visualização interativa:
+```bash
+docker-compose up swagger-ui
+# acessa http://localhost:8081
+```
+
+Ou cole o conteúdo em https://editor.swagger.io
 
 ### Endpoints
 
@@ -36,63 +54,44 @@ Visualização interativa: cole o conteúdo em https://editor.swagger.io
 
 ---
 
-Sim, vale adicionar uma observação na seção do banco explicando o comportamento do init e como resetar:
+## Banco de dados local
 
-## Banco de dados local + Documentação da API (Swagger UI local)
+O banco roda localmente via MySQL. Configure as credenciais no `application.properties` do backend.
 
-O banco MySQL e a documentação do contrato da API rodam via Docker. Na raiz do repo:
-
+Para criar o banco e o usuário (primeira vez):
 ```bash
-docker-compose up -d     # sobe MySQL em localhost:3306 e Swagger UI em localhost:8080
+sudo mysql
+```
+```sql
+CREATE DATABASE IF NOT EXISTS ods;
+CREATE USER 'ods_user'@'localhost' IDENTIFIED BY 'sua_senha';
+GRANT ALL PRIVILEGES ON ods.* TO 'ods_user'@'localhost';
+FLUSH PRIVILEGES;
+EXIT;
 ```
 
-Na primeira inicialização, o script `scripts/init.sql` é executado automaticamente e as tabelas são criadas. Para resetar o banco do zero:
-
+Para criar as tabelas, execute o script de inicialização:
 ```bash
-docker-compose down -v   # remove os dados
-docker-compose up -d     # sobe novamente com o script
-```
-
-Outra opção para visualizar o contrato da API é colar o conteúdo de `ods_api_contract.yaml` em https://editor.swagger.io
-
----
-
-## Desenvolvimento
-
-Instalar dependências:
-```bash
-pnpm install
-```
-
-Rodar cada subgrupo separadamente:
-```bash
-pnpm --filter frontend dev   # só o frontend
-pnpm --filter backend dev    # só o backend
-```
-
-Rodar os dois juntos (integração):
-```bash
-pnpm --parallel -r dev
+mysql -u ods_user -p ods < db/init.sql
 ```
 
 ---
 
 ## Workflow
 
-- A branch principal de desenvolvimento é `dev` — push direto permitido
+- Branch principal de desenvolvimento: `dev` — push direto permitido
 - `main` é reservada para produção — **nunca fazer push direto**
-- Quando o sistema estiver pronto, abrir um PR de `dev` → `main` para deploy
+- Quando pronto, abrir PR de `dev` → `main` para deploy
 ```
 dev    → desenvolvimento diário
-main   → produção (dispara deploy automático no Vercel e Railway)
+main   → produção (deploy automático no Vercel e Railway)
 ```
 
 ---
 
 ## Infraestrutura
 
-- **Monorepo:** pnpm workspaces — cada serviço aponta pra sua subpasta
-- **Frontend:** *a decidir*
-- **Backend:** *a decidir*
-- **Banco:** MySQL
-- **Deploy:** Vercel (frontend) + Railway (backend)
+- **Frontend:** Vercel — root directory `/frontend`
+- **Backend:** Railway — root directory `/backend`
+- **Banco:** MySQL — Railway em produção, MySQL local em desenvolvimento
+- **Deploy:** automático na `main`
