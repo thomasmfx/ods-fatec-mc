@@ -122,3 +122,9 @@
   color: var(--green);
   border-color: var(--green);
 }
+
+.erro {
+  color: #e53e3e;
+  font-size: 0.875rem;
+  margin: -0.25rem 0 0.5rem;
+}
