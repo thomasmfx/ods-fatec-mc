@@ -20,6 +20,7 @@ public class CadastroRequestDTO {
     private Integer orientacaoSexualId;
     private Integer racaCorId;
     private Integer cidadeId;
+    private String cidadeOutro;
     private Boolean autorizacaoImagem;
     private Integer regiaoId;
     private Integer instituicaoId;

@@ -52,10 +52,11 @@ public class ParticipanteRepository {
             ps.setInt(9, req.getOrientacaoSexualId());
             ps.setInt(10, req.getRacaCorId());
             ps.setInt(11, req.getCidadeId());
-            ps.setString(12, Boolean.TRUE.equals(req.getAutorizacaoImagem()) ? "S" : "N");
-            ps.setInt(13, req.getRegiaoId());
-            ps.setInt(14, req.getInstituicaoId());
-            ps.setString(15, req.getInstituicaoOutro());
+            ps.setString(12, req.getCidadeOutro()); // ajusta o índice conforme sua query
+            ps.setString(13, Boolean.TRUE.equals(req.getAutorizacaoImagem()) ? "S" : "N");
+            ps.setInt(14, req.getRegiaoId());
+            ps.setInt(15, req.getInstituicaoId());
+            ps.setString(16, req.getInstituicaoOutro());
             return ps;
         }, keyHolder);
         return keyHolder.getKey().intValue();
