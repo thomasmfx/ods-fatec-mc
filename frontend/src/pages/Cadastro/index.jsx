@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
-import Background from "../../components/background"
+import Hero from "../../components/Hero"
 import styles from "./cadastro.module.css"
 
 export default function Cadastro() {
@@ -22,14 +22,13 @@ export default function Cadastro() {
 
     return (
         <div className={`screen active ${styles.screen}`} id="screen-cadastro">
-            <div className={`blob-bg ${styles.cadastroHero}`}>
-                <Background />
-                <div className={styles.btnBack}>
-                    <button onClick={() => navigate('/')}>← Voltar</button>
-                </div>
-                <h1>Cadastro</h1>
-                <p>Preencha seus dados para participar</p>
-            </div>
+          <Hero>
+              <div className={styles.btnBack}>
+                  <button onClick={() => navigate('/')}>← Voltar</button>
+              </div>
+              <h1>Cadastro</h1>
+              <p>Preencha seus dados para participar</p>
+          </Hero>
 
             <div className="scroll">
                 <div className={styles.formSection}>

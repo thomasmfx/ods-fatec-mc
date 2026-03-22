@@ -1,0 +1,27 @@
+.hero {
+    position: relative;
+    overflow: hidden;
+    padding: 48px 24px 40px;
+    color: #fff;
+    transition: background-color 0.4s ease; /* Transição suave entre temas */
+}
+
+.content {
+    position: relative;
+    z-index: 2; /* Sempre acima dos blobs */
+}
+
+/* Optional: Move your shared typography here too */
+.content h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 8px;
+}
+
+.content p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+}
