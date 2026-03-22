@@ -3,6 +3,7 @@ package br.com.fatec.ods.repository;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -10,16 +11,31 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import br.com.fatec.ods.dto.request.CadastroRequestDTO;
+import br.com.fatec.ods.dto.response.ParticipanteResumoDTO;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @Repository
 public class ParticipanteRepository {
 
     private final JdbcTemplate jdbc;
 
-    public ParticipanteRepository(JdbcTemplate jdbc) {
-        this.jdbc = jdbc;
-    }
+    public Optional<ParticipanteResumoDTO> buscarResumoPorEmail(String email) {
+        String sql = """
+            SELECT p.par_id, p.par_nome, p.par_mail, t.tpp_descricao
+            FROM PARTICIPANTES p
+            JOIN TIPOS_PARTICIPANTES t ON t.tpp_id = p.par_tpp_id
+            WHERE p.par_mail = ?
+            """;
 
+        return jdbc.query(sql, (rs, rn) -> new ParticipanteResumoDTO(
+            rs.getInt("par_id"),
+            rs.getString("par_nome"),
+            rs.getString("par_mail"),
+            rs.getString("tpp_descricao")
+        ), email).stream().findFirst();
+    }
+    
     public boolean existsByMail(String mail) {
         Integer count = jdbc.queryForObject(
             "SELECT COUNT(*) FROM PARTICIPANTES WHERE par_mail = ?",

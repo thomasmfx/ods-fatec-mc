@@ -4,10 +4,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import br.com.fatec.ods.dto.request.CadastroRequestDTO;
+import br.com.fatec.ods.dto.request.CheckinRequestDTO;
 import br.com.fatec.ods.dto.response.OpcoesCadastroDTO;
+import br.com.fatec.ods.dto.response.ParticipanteResumoDTO;
+import br.com.fatec.ods.dto.response.SessaoResponseDTO;
 import br.com.fatec.ods.exception.EmailJaCadastradoException;
+import br.com.fatec.ods.exception.ParticipanteNaoEncontradoException;
 import br.com.fatec.ods.repository.OpcoesRepository;
 import br.com.fatec.ods.repository.ParticipanteRepository;
+import br.com.fatec.ods.security.JwtService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -16,9 +21,19 @@ public class SessaoService {
 
     private final ParticipanteRepository participanteRepo;
     private final OpcoesRepository opcoesRepo;
+    private final JwtService jwtService;
+
+    public SessaoResponseDTO checkin(CheckinRequestDTO dto) {
+    ParticipanteResumoDTO participante = participanteRepo
+        .buscarResumoPorEmail(dto.email())
+        .orElseThrow(ParticipanteNaoEncontradoException::new);
+
+        String token = jwtService.gerarToken(participante.id(), participante.email());
+        return new SessaoResponseDTO(participante, token);
+    }
 
     @Transactional
-    public void cadastrar(CadastroRequestDTO req) {
+    public SessaoResponseDTO cadastrar(CadastroRequestDTO req) {
         if (participanteRepo.existsByMail(req.getEmail())) {
             throw new EmailJaCadastradoException(req.getEmail());
         }
@@ -28,6 +43,13 @@ public class SessaoService {
         participanteRepo.inserirPublicos(parId, req.getPublicosFatecIds());
         if (req.getCadeiasProdutivosIds() != null) participanteRepo.inserirCadeias(parId, req.getCadeiasProdutivosIds());
         if (req.getDeficienciasIds() != null) participanteRepo.inserirDeficiencias(parId, req.getDeficienciasIds());
+
+        ParticipanteResumoDTO resumo = participanteRepo
+            .buscarResumoPorEmail(req.getEmail())
+            .orElseThrow();
+
+        String token = jwtService.gerarToken(resumo.id(), resumo.email());
+        return new SessaoResponseDTO(resumo, token);
     }
 
     public OpcoesCadastroDTO opcoes() {
