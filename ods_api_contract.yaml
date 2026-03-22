@@ -8,10 +8,10 @@ info:
   version: 1.0.0
 
 servers:
+  - url: http://localhost:8080
+    description: Desenvolvimento local
   - url: https://api.ods-mogi.railway.app
     description: Produção (Railway)
-  - url: http://localhost:3000
-    description: Desenvolvimento local
 
 tags:
   - name: Sessão
