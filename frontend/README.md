@@ -5,6 +5,7 @@ React + JavaScript + CSS Modules
 ---
 
 ## Setup
+
 ```bash
 cd frontend
 npm install
@@ -17,6 +18,7 @@ Acessa http://localhost:5173
 ---
 
 ## Estrutura
+
 ```
 src/
 ├── components/       # componentes reutilizáveis
@@ -37,17 +39,18 @@ src/
 
 ## Variáveis de ambiente
 
-| Variável | Descrição |
-|---|---|
+| Variável       | Descrição           |
+| -------------- | ------------------- |
 | `VITE_API_URL` | URL base do backend |
 
 ---
 
 ## Chamadas à API
-```javascript
-import api from '../services/api'
 
-const response = await api.post('/sessao/checkin', { email })
+```javascript
+import api from '../services/api';
+
+const response = await api.post('/sessao/checkin', { email });
 ```
 
 Consulte `ods_api_contract.yaml` na raiz para ver todos os endpoints disponíveis.

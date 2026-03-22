@@ -1,121 +1,124 @@
 .screen {
-    background: var(--green-pale);
+  background: var(--green-pale);
 }
 
 .hero {
-    background: var(--green);
-    position: relative;
-    overflow: hidden;
-    padding: 48px 24px 40px;
-    color: #fff;
-    /* This creates the container for the absolute SVG */
+  background: var(--green);
+  position: relative;
+  overflow: hidden;
+  padding: 48px 24px 40px;
+  color: #fff;
+  /* This creates the container for the absolute SVG */
 }
 
 .hero :global(h1) {
-    font-family: 'Fraunces', serif;
-    font-size: 28px;
-    font-weight: 600;
-    line-height: 1.2;
-    margin-bottom: 8px;
+  font-family: 'Fraunces', serif;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 8px;
 }
 
 .hero :global(p) {
-    font-size: 14px;
-    color: rgba(255, 255, 255, 0.8);
-    line-height: 1.6;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
 }
 
 .hero > *:not(svg) {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 /* Alternatively, target them individually if the selector above is too broad */
-.dateChip, 
-.hero h1, 
+.dateChip,
+.hero h1,
 .hero p {
-    position: relative;
-    z-index: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .dateChip {
-    display: inline-block;
-    font-size: 12px;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 16px;
-    letter-spacing: 0.04em;
+  display: inline-block;
+  font-size: 12px;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  letter-spacing: 0.04em;
 }
 
 .loginCard {
-    margin: 24px 20px 0;
-    background: var(--surface);
-    border-radius: 24px;
-    padding: 24px 20px;
-    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.06);
+  margin: 24px 20px 0;
+  background: var(--surface);
+  border-radius: 24px;
+  padding: 24px 20px;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.06);
 }
 
 .loginCard :global(h2) {
-    font-family: 'Fraunces', serif;
-    font-size: 18px;
-    margin-bottom: 4px;
+  font-family: 'Fraunces', serif;
+  font-size: 18px;
+  margin-bottom: 4px;
 }
 
 .sub {
-    font-size: 13px;
-    color: var(--text-muted);
-    margin-bottom: 20px;
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 20px;
 }
 
 .divider {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin: 20px 0;
-    font-size: 13px;
-    color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .divider::before,
 .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
 }
 
 .loginFooter {
-    padding: 20px 24px;
-    text-align: center;
-    font-size: 13px;
-    color: var(--text-muted);
+  padding: 20px 24px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
 .loginFooter :global(a) {
-    color: var(--green);
-    text-decoration: none;
-    font-weight: 500;
-    cursor: pointer;
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
 }
 
 .loginFooter button {
-    background: none;
-    border: none;
-    color: var(--green);
-    text-decoration: none;
-    font-weight: 500;
-    cursor: pointer;
-    font-size: 13px;
+  background: none;
+  border: none;
+  color: var(--green);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  font-size: 13px;
 }
 
 .btnCadastrar {
-    transition: background 0.3s, color 0.3s, border-color 0.3s;
-    text-decoration: none;
+  transition:
+    background 0.3s,
+    color 0.3s,
+    border-color 0.3s;
+  text-decoration: none;
 }
 
 .btnCadastrar:hover {
-    background: var(--green-light);
-    color: var(--green);
-    border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+  border-color: var(--green);
 }
