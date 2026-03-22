@@ -36,9 +36,9 @@ public class ParticipanteRepository {
                     par_nome, par_mail, par_fone, par_data_conferencia,
                     par_recs_acessibilidade, par_ocupacao,
                     par_tpp_id, par_idg_id, par_ors_id, par_rcr_id,
-                    par_cid_id, par_autorizacao, par_reg_id,
+                    par_cid_id, par_cid_outro, par_autorizacao, par_reg_id,
                     par_itv_id, par_itv_outro
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, req.getNome());
