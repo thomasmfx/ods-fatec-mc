@@ -1,10 +1,24 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@400;500&display=swap');
-*{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --green:#2D6A4F;--green-mid:#40916C;--green-light:#D8F3DC;--green-pale:#F0FFF4;
-  --text:#1a1a1a;--text-muted:#666;--surface:#fff;--surface-2:#f9f9f6;
-  --border:#e0e0d8;--radius:18px;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
+
+:root {
+    --green: #2D6A4F;
+    --green-mid: #40916C;
+    --green-light: #D8F3DC;
+    --green-pale: #F0FFF4;
+    --text: #1a1a1a;
+    --text-muted: #666;
+    --surface: #fff;
+    --surface-2: #f9f9f6;
+    --border: #e0e0d8;
+    --radius: 18px;
+}
+
 html,
 body {
     height: 100%;
@@ -257,4 +271,21 @@ label.field-label {
     color: var(--text-muted);
     line-height: 1.5;
     margin-bottom: 24px;
+}
+
+.option-card input[type="checkbox"] {
+    display: none;
+}
+
+fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+legend {
+    display: block;
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 6px;
 }
