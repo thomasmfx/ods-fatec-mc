@@ -8,6 +8,7 @@
     overflow: hidden;
     padding: 48px 24px 40px;
     color: #fff;
+    /* This creates the container for the absolute SVG */
 }
 
 .hero :global(h1) {
@@ -22,6 +23,19 @@
     font-size: 14px;
     color: rgba(255, 255, 255, 0.8);
     line-height: 1.6;
+}
+
+.hero > *:not(svg) {
+    position: relative;
+    z-index: 1;
+}
+
+/* Alternatively, target them individually if the selector above is too broad */
+.dateChip, 
+.hero h1, 
+.hero p {
+    position: relative;
+    z-index: 1;
 }
 
 .dateChip {
@@ -97,6 +111,7 @@
 
 .btnCadastrar {
     transition: background 0.3s, color 0.3s, border-color 0.3s;
+    text-decoration: none;
 }
 
 .btnCadastrar:hover {

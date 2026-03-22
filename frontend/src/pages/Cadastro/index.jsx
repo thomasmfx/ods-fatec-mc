@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { useNavigate } from "react-router-dom"
 import PropTypes from "prop-types"
-import Background from "../../components/background"
+import Hero from "../../components/Hero"
+
+
 import styles from "./cadastro.module.css"
 
 function hasSelectedFormacao(select) {
@@ -408,14 +410,13 @@ AutorizacaoSection.propTypes = {
 function CadastroPage({ form, select, handleChange, toggleOpt, navigate }) {
     return (
         <div className={`screen active ${styles.screen}`} id="screen-cadastro">
-            <div className={`blob-bg ${styles.cadastroHero}`}>
-                <Background />
-                <div className={styles.btnBack}>
-                    <button onClick={() => navigate('/')}>← Voltar</button>
-                </div>
-                <h1>Cadastro</h1>
-                <p>Preencha seus dados para participar</p>
-            </div>
+          <Hero>
+              <div className={styles.btnBack}>
+                  <button onClick={() => navigate('/')}>← Voltar</button>
+              </div>
+              <h1>Cadastro</h1>
+              <p>Preencha seus dados para participar</p>
+          </Hero>
 
             <div className="scroll">
                 <DadosPessoaisSection form={form} select={select} handleChange={handleChange} toggleOpt={toggleOpt} />
