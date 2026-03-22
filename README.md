@@ -11,7 +11,9 @@ Fatec Mogi das Cruzes · 28/03 e 04/04/2026
 ├── frontend/
 ├── backend/
 ├── db/
-│   └── init.sql
+│   ├── init.sql
+│   ├── seed_prod.sql
+│   └── seed.sql
 ├── docs/
 │   ├── ods_api_contract.yaml
 │   └── postman-collection.json
@@ -50,6 +52,7 @@ Ou cole o conteúdo em https://editor.swagger.io
 | POST | `/sessao/checkin` | Check-in por e-mail |
 | POST | `/sessao/cadastro` | Cadastro completo |
 | POST | `/sessao/nova` | Encerrar sessão (instrutor) |
+| GET | `/sessao/opcoes` | Listar opções do formulário |
 | POST | `/votacao` | Registrar votos + enviar certificado |
 | GET | `/eixos` | Listar eixos e propostas |
 | GET | `/dashboard` | Resultados em tempo real |
