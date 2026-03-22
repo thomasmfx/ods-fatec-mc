@@ -39,15 +39,12 @@ export default function Login() {
                   Cadastrar agora
                 </Link>
             </div>
-
+            
             <div className={styles.loginFooter}>
                 <button onClick={() => navigate('/Dashboard')}>
                     Ver resultados ao vivo →
                 </button>
             </div>
-
-
-
         </div >
     )
 }
