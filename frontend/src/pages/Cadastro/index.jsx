@@ -112,19 +112,23 @@ export default function Cadastro() {
                             <span>Não</span>
                         </div>
                     </div>
-                    <div className="field">
-                        <label className="field-label">Se sim, qual(is)?</label>
-                        <select>
-                            <option value="">Selecione...</option>
-                            <option>Pessoa cega</option>
-                            <option>Pessoa com baixa visão</option>
-                            <option>Pessoa surda usuária de Libras</option>
-                            <option>Pessoa surda oralizada</option>
-                            <option>Pessoa surda cega</option>
-                            <option>Deficiência física/motora</option>
-                            <option>Deficiência intelectual/mental</option>
-                        </select>
-                    </div>
+
+                    {select['def'] === 'sim' && (
+                        <div className="field">
+                            <label className="field-label">Se sim, qual(is)?</label>
+                            <select>
+                                <option value="">Selecione...</option>
+                                <option>Pessoa cega</option>
+                                <option>Pessoa com baixa visão</option>
+                                <option>Pessoa surda usuária de Libras</option>
+                                <option>Pessoa surda oralizada</option>
+                                <option>Pessoa surda cega</option>
+                                <option>Deficiência física/motora</option>
+                                <option>Deficiência intelectual/mental</option>
+                            </select>
+                        </div>
+                    )}
+
                     <div className="field">
                         <label className="field-label">Recurso de acessibilidade específico</label>
                         <textarea placeholder="Descreva se necessitar de algum recurso especial..."></textarea>
@@ -180,21 +184,25 @@ export default function Cadastro() {
                             <span>Não</span>
                         </div>
                     </div>
-                    <div className="field">
-                        <label className="field-label">Se sim, qual cadeia?</label>
-                        <div className={`option-card ${select['tipo-cadeia_cultivo'] ? 'sel' : ''}`} onClick={() => toggleOpt('cultivo', 'check', 'tipo-cadeia')}>
-                            <div className="mark mark-sq"><div className="mark-check">✓</div></div>
-                            <span>Cultivo</span>
+
+                    {select['cadeia'] === 'sim' && (
+                        <div className="field">
+                            <label className="field-label">Se sim, qual cadeia?</label>
+                            <div className={`option-card ${select['tipo-cadeia_cultivo'] ? 'sel' : ''}`} onClick={() => toggleOpt('cultivo', 'check', 'tipo-cadeia')}>
+                                <div className="mark mark-sq"><div className="mark-check">✓</div></div>
+                                <span>Cultivo</span>
+                            </div>
+                            <div className={`option-card ${select['tipo-cadeia_criacao'] ? 'sel' : ''}`} onClick={() => toggleOpt('criacao', 'check', 'tipo-cadeia')}>
+                                <div className="mark mark-sq"><div className="mark-check">✓</div></div>
+                                <span>Criação</span>
+                            </div>
+                            <div className={`option-card ${select['tipo-cadeia_agroindustria'] ? 'sel' : ''}`} onClick={() => toggleOpt('agroindustria', 'check', 'tipo-cadeia')}>
+                                <div className="mark mark-sq"><div className="mark-check">✓</div></div>
+                                <span>Agroindústria</span>
+                            </div>
                         </div>
-                        <div className={`option-card ${select['tipo-cadeia_criacao'] ? 'sel' : ''}`} onClick={() => toggleOpt('criacao', 'check', 'tipo-cadeia')}>
-                            <div className="mark mark-sq"><div className="mark-check">✓</div></div>
-                            <span>Criação</span>
-                        </div>
-                        <div className={`option-card ${select['tipo-cadeia_agroindustria'] ? 'sel' : ''}`} onClick={() => toggleOpt('agroindustria', 'check', 'tipo-cadeia')}>
-                            <div className="mark mark-sq"><div className="mark-check">✓</div></div>
-                            <span>Agroindústria</span>
-                        </div>
-                    </div>
+                    )}
+
                     <div className="field">
                         <label className="field-label">Vinculado(a) a qual instituição? *</label>
                         <select>
