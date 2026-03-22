@@ -85,6 +85,16 @@
     cursor: pointer;
 }
 
+.loginFooter button {
+    background: none;
+    border: none;
+    color: var(--green);
+    text-decoration: none;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 13px;
+}
+
 .btnCadastrar {
     transition: background 0.3s, color 0.3s, border-color 0.3s;
 }
