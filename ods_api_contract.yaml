@@ -48,7 +48,7 @@ paths:
                 email:
                   type: string
                   format: email
-                  example: maria.silva@email.com
+                  example: carlos.mendes@email.com
       responses:
         '200':
           description: Participante encontrado
@@ -59,7 +59,7 @@ paths:
                 properties:
                   participante:
                     $ref: '#/components/schemas/ParticipanteResumo'
-                  sessao_token:
+                  sessaoToken:
                     type: string
                     description: Token de sessão para uso nas próximas requisições
                     example: eyJhbGciOiJIUzI1NiJ9...
@@ -88,6 +88,29 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CadastroInput'
+            example:
+              nome: Maria Silva
+              email: maria.silva@email.com
+              telefone: "11999998888"
+              dataConferencia: "2026-03-28"
+              identidadeGeneroId: 3
+              orientacaoSexualId: 1
+              racaCorId: 1
+              cidadeId: 1
+              regiaoId: 1
+              pertenceCadeiaProdutiva: false
+              cadeiasProdutivosIds: []
+              instituicaoId: 1
+              instituicaoOutro: null
+              areasFormacaoIds: [2]
+              ocupacao: Professora
+              publicosFatecIds: [3]
+              tipoParticipanteId: 1
+              possuiDeficiencia: false
+              deficienciasIds: []
+              recursoAcessibilidade: null
+              eixosInteresseIds: [1, 2]
+              autorizacaoImagem: true
       responses:
         '201':
           description: Participante cadastrado com sucesso
@@ -98,7 +121,7 @@ paths:
                 properties:
                   participante:
                     $ref: '#/components/schemas/ParticipanteResumo'
-                  sessao_token:
+                  sessaoToken:
                     type: string
                     example: eyJhbGciOiJIUzI1NiJ9...
         '409':
@@ -164,23 +187,22 @@ paths:
                   maxItems: 4
                   items:
                     type: object
-                    required: [eixo_id, proposta_id]
+                    required: [eixoId, propostaId]
                     properties:
-                      eixo_id:
+                      eixoId:
                         type: integer
-                        example: 1
-                      proposta_id:
+                      propostaId:
                         type: integer
-                        example: 3
-                  example:
-                    - eixo_id: 1
-                      proposta_id: 2
-                    - eixo_id: 2
-                      proposta_id: 5
-                    - eixo_id: 4
-                      proposta_id: 8
-                    - eixo_id: 5
-                      proposta_id: 11
+            example:
+              votos:
+                - eixoId: 1
+                  propostaId: 1
+                - eixoId: 2
+                  propostaId: 3
+                - eixoId: 4
+                  propostaId: 7
+                - eixoId: 5
+                  propostaId: 9
       responses:
         '200':
           description: Votos registrados e certificado enviado
@@ -192,7 +214,7 @@ paths:
                   mensagem:
                     type: string
                     example: Votação concluída. Certificado enviado para maria.silva@email.com.
-                  email_enviado_para:
+                  emailEnviadoPara:
                     type: string
                     format: email
                     example: maria.silva@email.com
@@ -243,15 +265,45 @@ paths:
               example:
                 eixos:
                   - id: 1
-                    nome: Democracia e instituições fortes
-                    descricao: Fortalecimento das instituições democráticas e participação cidadã.
+                    nome: Eixo 1
+                    descricao: Democracia e instituições fortes
                     propostas:
                       - id: 1
-                        titulo: Conselhos municipais digitais
-                        descricao: Plataformas abertas para participação nos conselhos.
+                        titulo: Fortalecimento das instituições democráticas
+                        descricao: Criação de mecanismos de transparência e controle social nas instituições públicas municipais.
                       - id: 2
-                        titulo: Educação política nas escolas
-                        descricao: Programas de educação cívica integrados ao currículo.
+                        titulo: Participação cidadã nos processos decisórios
+                        descricao: Implementação de plataformas digitais para consulta pública e engajamento da sociedade.
+                  - id: 2
+                    nome: Eixo 2
+                    descricao: Sustentabilidade ambiental
+                    propostas:
+                      - id: 3
+                        titulo: Redução de resíduos sólidos urbanos
+                        descricao: Programa de compostagem e coleta seletiva em bairros da cidade com metas anuais.
+                      - id: 4
+                        titulo: Arborização urbana e corredores verdes
+                        descricao: Plantio de espécies nativas em vias públicas e criação de corredores ecológicos urbanos.
+                  - id: 3
+                    nome: Eixo 4
+                    descricao: Inovação tecnológica para o desenvolvimento sustentável
+                    propostas:
+                      - id: 7
+                        titulo: Incentivo à inovação em startups locais
+                        descricao: Criação de hub de inovação com suporte técnico e financeiro para empreendedores locais.
+                      - id: 8
+                        titulo: Capacitação digital para trabalhadores
+                        descricao: Programa de letramento digital para trabalhadores de setores tradicionais em transição.
+                  - id: 4
+                    nome: Eixo 5
+                    descricao: Governança participativa
+                    propostas:
+                      - id: 9
+                        titulo: Orçamento participativo digital
+                        descricao: Plataforma de votação online para alocação de parte do orçamento municipal pelos cidadãos.
+                      - id: 10
+                        titulo: Conselhos municipais fortalecidos
+                        descricao: Revisão das estruturas dos conselhos municipais para maior representatividade deliberativa.
 
   # ── DASHBOARD ───────────────────────────────
 
@@ -270,27 +322,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/DashboardData'
               example:
-                total_participantes: 247
-                total_votos: 988
+                totalParticipantes: 10
+                totalVotos: 20
                 eixos:
                   - id: 1
-                    nome: Democracia e instituições fortes
+                    nome: Eixo 1
                     propostas:
                       - id: 1
-                        titulo: Conselhos municipais digitais
-                        votos: 98
+                        titulo: Fortalecimento das instituições democráticas
+                        votos: 3
                       - id: 2
-                        titulo: Educação política nas escolas
-                        votos: 82
+                        titulo: Participação cidadã nos processos decisórios
+                        votos: 2
                   - id: 2
-                    nome: Sustentabilidade ambiental
+                    nome: Eixo 2
                     propostas:
                       - id: 3
-                        titulo: Recuperação de matas ciliares
-                        votos: 112
+                        titulo: Redução de resíduos sólidos urbanos
+                        votos: 4
                       - id: 4
-                        titulo: Energia solar em equipamentos públicos
-                        votos: 79
+                        titulo: Arborização urbana e corredores verdes
+                        votos: 1
+                  - id: 3
+                    nome: Eixo 4
+                    propostas:
+                      - id: 7
+                        titulo: Incentivo à inovação em startups locais
+                        votos: 4
+                      - id: 8
+                        titulo: Capacitação digital para trabalhadores
+                        votos: 2
+                  - id: 4
+                    nome: Eixo 5
+                    propostas:
+                      - id: 9
+                        titulo: Orçamento participativo digital
+                        votos: 2
+                      - id: 10
+                        titulo: Conselhos municipais fortalecidos
+                        votos: 2
 
 # ─────────────────────────────────────────────
 # COMPONENTS
@@ -347,7 +417,7 @@ components:
                 example:
                   - campo: email
                     mensagem: E-mail inválido.
-                  - campo: par_nome
+                  - campo: nome
                     mensagem: Nome completo é obrigatório.
 
   schemas:
@@ -365,17 +435,17 @@ components:
       properties:
         id:
           type: integer
-          example: 42
+          example: 1
         nome:
           type: string
-          example: Maria Silva
+          example: Carlos Eduardo Mendes
         email:
           type: string
           format: email
-          example: maria.silva@email.com
-        tipo_participante:
+          example: carlos.mendes@email.com
+        tipoParticipante:
           type: string
-          example: Participante Externo
+          example: Presencial
 
     CadastroInput:
       type: object
@@ -383,17 +453,17 @@ components:
         - nome
         - email
         - telefone
-        - data_conferencia
-        - identidade_genero_id
-        - orientacao_sexual_id
-        - raca_cor_id
-        - cidade_id
-        - regiao_id
+        - dataConferencia
+        - identidadeGeneroId
+        - orientacaoSexualId
+        - racaCorId
+        - cidadeId
+        - regiaoId
         - ocupacao
-        - tipo_participante_id
-        - areas_formacao_ids
-        - eixos_interesse_ids
-        - autorizacao_imagem
+        - tipoParticipanteId
+        - areasFormacaoIds
+        - eixosInteresseIds
+        - autorizacaoImagem
       properties:
         nome:
           type: string
@@ -406,76 +476,76 @@ components:
           type: string
           pattern: '^\d{11}$'
           example: "11999998888"
-        data_conferencia:
+        dataConferencia:
           type: string
           format: date
           enum: ["2026-03-28", "2026-04-04"]
           example: "2026-03-28"
-        identidade_genero_id:
-          type: integer
-          example: 1
-        orientacao_sexual_id:
+        identidadeGeneroId:
           type: integer
           example: 3
-        raca_cor_id:
+        orientacaoSexualId:
           type: integer
-          example: 2
-        cidade_id:
+          example: 1
+        racaCorId:
           type: integer
-          example: 9
-        regiao_id:
+          example: 1
+        cidadeId:
           type: integer
-          example: 2
-        pertence_cadeia_produtiva:
+          example: 1
+        regiaoId:
+          type: integer
+          example: 1
+        pertenceCadeiaProdutiva:
           type: boolean
           example: false
-        cadeias_produtivas_ids:
+        cadeiasProdutivosIds:
           type: array
           items:
             type: integer
           example: []
-        instituicao_id:
+        instituicaoId:
           type: integer
           example: 1
-        instituicao_outro:
+        instituicaoOutro:
           type: string
           nullable: true
           example: null
-        areas_formacao_ids:
+        areasFormacaoIds:
           type: array
           items:
             type: integer
-          example: [8, 9]
+          example: [2]
         ocupacao:
           type: string
           example: Professora
-        publicos_fatec_ids:
+        publicosFatecIds:
           type: array
           items:
             type: integer
           description: Opcional — só preencher se tiver vínculo com a Fatec
-          example: []
-        tipo_participante_id:
+          example: [3]
+        tipoParticipanteId:
           type: integer
           example: 1
-        possui_deficiencia:
+        possuiDeficiencia:
           type: boolean
           example: false
-        deficiencias_ids:
+        deficienciasIds:
           type: array
           items:
             type: integer
           example: []
-        recurso_acessibilidade:
+        recursoAcessibilidade:
           type: string
           nullable: true
           example: null
-        eixos_interesse_ids:
+        eixosInteresseIds:
           type: array
           items:
             type: integer
           example: [1, 2]
-        autorizacao_imagem:
+        autorizacaoImagem:
           type: boolean
           enum: [true]
           example: true
@@ -507,9 +577,9 @@ components:
     DashboardData:
       type: object
       properties:
-        total_participantes:
+        totalParticipantes:
           type: integer
-        total_votos:
+        totalVotos:
           type: integer
         eixos:
           type: array
