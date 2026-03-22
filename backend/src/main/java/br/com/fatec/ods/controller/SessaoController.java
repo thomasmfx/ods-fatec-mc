@@ -29,9 +29,8 @@ public class SessaoController {
     }
 
     @PostMapping("/cadastro")
-    public ResponseEntity<Void> cadastrar(@RequestBody @Valid CadastroRequestDTO req) {
-        sessaoService.cadastrar(req);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<SessaoResponseDTO> cadastrar(@RequestBody @Valid CadastroRequestDTO req) {
+        return ResponseEntity.ok(sessaoService.cadastrar(req));
     }
 
     @GetMapping("/opcoes")
