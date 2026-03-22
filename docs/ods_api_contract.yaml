@@ -93,18 +93,19 @@ paths:
               email: maria.silva@email.com
               telefone: "11999998888"
               dataConferencia: "2026-03-28"
-              identidadeGeneroId: 3
-              orientacaoSexualId: 1
-              racaCorId: 1
-              cidadeId: 1
-              regiaoId: 1
+              identidadeGeneroId: 1
+              orientacaoSexualId: 3
+              racaCorId: 4
+              cidadeId: 9
+              cidadeOutro: null
+              regiaoId: 2
               pertenceCadeiaProdutiva: false
               cadeiasProdutivosIds: []
               instituicaoId: 1
               instituicaoOutro: null
-              areasFormacaoIds: [2]
+              areasFormacaoIds: [9]
               ocupacao: Professora
-              publicosFatecIds: [3]
+              publicosFatecIds: [2]
               tipoParticipanteId: 1
               possuiDeficiencia: false
               deficienciasIds: []
@@ -160,6 +161,130 @@ paths:
                     example: Sessão encerrada com sucesso.
         '401':
           $ref: '#/components/responses/NaoAutorizado'
+
+  /sessao/opcoes:
+    get:
+      tags: [Sessão]
+      summary: Retorna todas as opções para o formulário de cadastro
+      description: >
+        Retorna os dados de todas as tabelas de domínio necessárias para
+        montar o formulário de cadastro no frontend. Deve ser chamado uma
+        vez ao carregar a página de cadastro.
+      responses:
+        '200':
+          description: Opções do formulário
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpcoesCadastro'
+              example:
+                identidadesGenero:
+                  - id: 1
+                    nome: Mulher - cis
+                  - id: 2
+                    nome: Mulher - trans
+                  - id: 3
+                    nome: Homem - cis
+                  - id: 4
+                    nome: Homem - trans
+                  - id: 5
+                    nome: Travesti
+                  - id: 6
+                    nome: Não-binário
+                  - id: 7
+                    nome: Outro
+                orientacoesSexuais:
+                  - id: 1
+                    nome: Bissexual
+                  - id: 2
+                    nome: Gay
+                  - id: 3
+                    nome: Heterossexual
+                  - id: 4
+                    nome: Lésbica
+                  - id: 5
+                    nome: Pansexual
+                  - id: 6
+                    nome: Outro
+                racasCores:
+                  - id: 1
+                    nome: Indígena
+                  - id: 2
+                    nome: Negra (Pretos)
+                  - id: 3
+                    nome: Negra (Pardos)
+                  - id: 4
+                    nome: Branca
+                  - id: 5
+                    nome: Amarela
+                cidades:
+                  - id: 1
+                    nome: Arujá
+                  - id: 9
+                    nome: Mogi das Cruzes
+                  - id: 15
+                    nome: Outro
+                regioes:
+                  - id: 1
+                    nome: Rural
+                  - id: 2
+                    nome: Urbana
+                instituicoes:
+                  - id: 1
+                    nome: Instituição Pública
+                  - id: 2
+                    nome: Instituição Privada
+                  - id: 3
+                    nome: Sociedade civil
+                  - id: 4
+                    nome: Comunidade
+                  - id: 5
+                    nome: Outro
+                areasFormacao:
+                  - id: 1
+                    nome: Estudante
+                  - id: 8
+                    nome: Ensino Superior Cursando
+                  - id: 9
+                    nome: Ensino Superior Completo
+                  - id: 10
+                    nome: Outro
+                publicosFatec:
+                  - id: 1
+                    nome: Estudante
+                  - id: 2
+                    nome: Docente
+                  - id: 3
+                    nome: Gestor
+                  - id: 4
+                    nome: Parceiro
+                  - id: 5
+                    nome: Outro
+                cadeiasProdutivas:
+                  - id: 1
+                    nome: Cultivo
+                  - id: 2
+                    nome: Criação
+                  - id: 3
+                    nome: Agroindústria
+                tiposParticipante:
+                  - id: 1
+                    nome: Presencial
+                deficiencias:
+                  - id: 1
+                    nome: pessoa cega
+                  - id: 2
+                    nome: pessoa com baixa visão
+                  - id: 3
+                    nome: pessoa surda usuária de Libras
+                  - id: 4
+                    nome: pessoa surda oralizada
+                  - id: 5
+                    nome: pessoa surda cega
+                  - id: 6
+                    nome: pessoa com deficiência física/motora
+                  - id: 7
+                    nome: pessoa com deficiência intelectual/mental
 
   # ── VOTAÇÃO ─────────────────────────────────
 
@@ -483,19 +608,23 @@ components:
           example: "2026-03-28"
         identidadeGeneroId:
           type: integer
-          example: 3
+          example: 1
         orientacaoSexualId:
           type: integer
-          example: 1
+          example: 3
         racaCorId:
           type: integer
-          example: 1
+          example: 4
         cidadeId:
           type: integer
-          example: 1
+          example: 9
+        cidadeOutro:
+          type: string
+          nullable: true
+          example: null
         regiaoId:
           type: integer
-          example: 1
+          example: 2
         pertenceCadeiaProdutiva:
           type: boolean
           example: false
@@ -515,7 +644,7 @@ components:
           type: array
           items:
             type: integer
-          example: [2]
+          example: [9]
         ocupacao:
           type: string
           example: Professora
@@ -524,7 +653,7 @@ components:
           items:
             type: integer
           description: Opcional — só preencher se tiver vínculo com a Fatec
-          example: [3]
+          example: [2]
         tipoParticipanteId:
           type: integer
           example: 1
@@ -601,3 +730,59 @@ components:
                       type: string
                     votos:
                       type: integer
+
+    OpcaoSimples:
+      type: object
+      properties:
+        id:
+          type: integer
+        nome:
+          type: string
+
+    OpcoesCadastro:
+      type: object
+      properties:
+        identidadesGenero:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        orientacoesSexuais:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        racasCores:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        cidades:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        regioes:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        instituicoes:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        areasFormacao:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        publicosFatec:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        cadeiasProdutivas:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        tiposParticipante:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'
+        deficiencias:
+          type: array
+          items:
+            $ref: '#/components/schemas/OpcaoSimples'

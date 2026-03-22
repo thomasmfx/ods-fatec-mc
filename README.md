@@ -12,7 +12,9 @@ Fatec Mogi das Cruzes · 28/03 e 04/04/2026
 ├── backend/
 ├── db/
 │   └── init.sql
-├── ods_api_contract.yaml
+├── docs/
+│   ├── ods_api_contract.yaml
+│   └── postman-collection.json
 ├── docker-compose.yml
 └── .env.example
 ```

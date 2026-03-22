@@ -21,6 +21,22 @@
       "name": "Sessão",
       "item": [
         {
+          "name": "Opções do formulário de cadastro (200)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{baseUrl}}/sessao/opcoes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessao",
+                "opcoes"
+              ]
+            }
+          }
+        },
+        {
           "name": "Check-in — participante existente (200)",
           "event": [
             {
@@ -40,7 +56,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -48,8 +67,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/sessao/checkin",
-              "host": ["{{baseUrl}}"],
-              "path": ["sessao", "checkin"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessao",
+                "checkin"
+              ]
             }
           }
         },
@@ -58,7 +82,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -66,8 +93,13 @@
             },
             "url": {
               "raw": "{{baseUrl}}/sessao/checkin",
-              "host": ["{{baseUrl}}"],
-              "path": ["sessao", "checkin"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessao",
+                "checkin"
+              ]
             }
           }
         },
@@ -91,16 +123,24 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria.silva@email.com\",\n  \"telefone\": \"11999998888\",\n  \"dataConferencia\": \"2026-03-28\",\n  \"identidadeGeneroId\": 3,\n  \"orientacaoSexualId\": 1,\n  \"racaCorId\": 1,\n  \"cidadeId\": 1,\n  \"regiaoId\": 1,\n  \"pertenceCadeiaProdutiva\": false,\n  \"cadeiasProdutivosIds\": [],\n  \"instituicaoId\": 1,\n  \"instituicaoOutro\": null,\n  \"areasFormacaoIds\": [2],\n  \"ocupacao\": \"Professora\",\n  \"publicosFatecIds\": [3],\n  \"tipoParticipanteId\": 1,\n  \"possuiDeficiencia\": false,\n  \"deficienciasIds\": [],\n  \"recursoAcessibilidade\": null,\n  \"eixosInteresseIds\": [1, 2],\n  \"autorizacaoImagem\": true\n}"
+              "raw": "{\n  \"nome\": \"Maria Silva\",\n  \"email\": \"maria.silva@email.com\",\n  \"telefone\": \"11999998888\",\n  \"dataConferencia\": \"2026-03-28\",\n  \"identidadeGeneroId\": 1,\n  \"orientacaoSexualId\": 3,\n  \"racaCorId\": 4,\n  \"cidadeId\": 9,\n  \"cidadeOutro\": null,\n  \"regiaoId\": 2,\n  \"pertenceCadeiaProdutiva\": false,\n  \"cadeiasProdutivosIds\": [],\n  \"instituicaoId\": 1,\n  \"instituicaoOutro\": null,\n  \"areasFormacaoIds\": [\n    9\n  ],\n  \"ocupacao\": \"Professora\",\n  \"publicosFatecIds\": [\n    2\n  ],\n  \"tipoParticipanteId\": 1,\n  \"possuiDeficiencia\": false,\n  \"deficienciasIds\": [],\n  \"recursoAcessibilidade\": null,\n  \"eixosInteresseIds\": [\n    1,\n    2\n  ],\n  \"autorizacaoImagem\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/sessao/cadastro",
-              "host": ["{{baseUrl}}"],
-              "path": ["sessao", "cadastro"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessao",
+                "cadastro"
+              ]
             }
           }
         },
@@ -109,16 +149,24 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Carlos Mendes\",\n  \"email\": \"carlos.mendes@email.com\",\n  \"telefone\": \"11999998888\",\n  \"dataConferencia\": \"2026-03-28\",\n  \"identidadeGeneroId\": 2,\n  \"orientacaoSexualId\": 1,\n  \"racaCorId\": 1,\n  \"cidadeId\": 1,\n  \"regiaoId\": 1,\n  \"pertenceCadeiaProdutiva\": false,\n  \"cadeiasProdutivosIds\": [],\n  \"instituicaoId\": 1,\n  \"instituicaoOutro\": null,\n  \"areasFormacaoIds\": [2],\n  \"ocupacao\": \"Analista\",\n  \"publicosFatecIds\": [],\n  \"tipoParticipanteId\": 1,\n  \"possuiDeficiencia\": false,\n  \"deficienciasIds\": [],\n  \"recursoAcessibilidade\": null,\n  \"eixosInteresseIds\": [1, 2],\n  \"autorizacaoImagem\": true\n}"
+              "raw": "{\n  \"nome\": \"Carlos Mendes\",\n  \"email\": \"carlos.mendes@email.com\",\n  \"telefone\": \"11999998888\",\n  \"dataConferencia\": \"2026-03-28\",\n  \"identidadeGeneroId\": 3,\n  \"orientacaoSexualId\": 3,\n  \"racaCorId\": 4,\n  \"cidadeId\": 9,\n  \"cidadeOutro\": null,\n  \"regiaoId\": 2,\n  \"pertenceCadeiaProdutiva\": false,\n  \"cadeiasProdutivosIds\": [],\n  \"instituicaoId\": 1,\n  \"instituicaoOutro\": null,\n  \"areasFormacaoIds\": [\n    9\n  ],\n  \"ocupacao\": \"Analista\",\n  \"publicosFatecIds\": [\n    2\n  ],\n  \"tipoParticipanteId\": 1,\n  \"possuiDeficiencia\": false,\n  \"deficienciasIds\": [],\n  \"recursoAcessibilidade\": null,\n  \"eixosInteresseIds\": [\n    1,\n    2\n  ],\n  \"autorizacaoImagem\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/sessao/cadastro",
-              "host": ["{{baseUrl}}"],
-              "path": ["sessao", "cadastro"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessao",
+                "cadastro"
+              ]
             }
           }
         },
@@ -127,16 +175,24 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"nome\": \"Teste Listas Vazias\",\n  \"email\": \"teste.listas@email.com\",\n  \"telefone\": \"11900000001\",\n  \"dataConferencia\": \"2026-04-04\",\n  \"identidadeGeneroId\": 1,\n  \"orientacaoSexualId\": 1,\n  \"racaCorId\": 2,\n  \"cidadeId\": 2,\n  \"regiaoId\": 1,\n  \"pertenceCadeiaProdutiva\": false,\n  \"cadeiasProdutivosIds\": [],\n  \"instituicaoId\": 3,\n  \"instituicaoOutro\": null,\n  \"areasFormacaoIds\": [1],\n  \"ocupacao\": \"Estudante\",\n  \"publicosFatecIds\": [],\n  \"tipoParticipanteId\": 1,\n  \"possuiDeficiencia\": false,\n  \"deficienciasIds\": [],\n  \"recursoAcessibilidade\": null,\n  \"eixosInteresseIds\": [3, 4],\n  \"autorizacaoImagem\": true\n}"
+              "raw": "{\n  \"nome\": \"Teste Listas Vazias\",\n  \"email\": \"teste.listas@email.com\",\n  \"telefone\": \"11900000001\",\n  \"dataConferencia\": \"2026-04-04\",\n  \"identidadeGeneroId\": 1,\n  \"orientacaoSexualId\": 3,\n  \"racaCorId\": 4,\n  \"cidadeId\": 4,\n  \"cidadeOutro\": null,\n  \"regiaoId\": 2,\n  \"pertenceCadeiaProdutiva\": false,\n  \"cadeiasProdutivosIds\": [],\n  \"instituicaoId\": 1,\n  \"instituicaoOutro\": null,\n  \"areasFormacaoIds\": [\n    9\n  ],\n  \"ocupacao\": \"Estudante\",\n  \"publicosFatecIds\": [],\n  \"tipoParticipanteId\": 1,\n  \"possuiDeficiencia\": false,\n  \"deficienciasIds\": [],\n  \"recursoAcessibilidade\": null,\n  \"eixosInteresseIds\": [\n    3,\n    4\n  ],\n  \"autorizacaoImagem\": true\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/sessao/cadastro",
-              "host": ["{{baseUrl}}"],
-              "path": ["sessao", "cadastro"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessao",
+                "cadastro"
+              ]
             }
           }
         },
@@ -145,12 +201,20 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Authorization", "value": "Bearer {{sessaoToken}}" }
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sessaoToken}}"
+              }
             ],
             "url": {
               "raw": "{{baseUrl}}/sessao/nova",
-              "host": ["{{baseUrl}}"],
-              "path": ["sessao", "nova"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sessao",
+                "nova"
+              ]
             }
           }
         }
@@ -164,8 +228,14 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" },
-              { "key": "Authorization", "value": "Bearer {{sessaoToken}}" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{sessaoToken}}"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -173,8 +243,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/votacao",
-              "host": ["{{baseUrl}}"],
-              "path": ["votacao"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "votacao"
+              ]
             }
           }
         },
@@ -183,7 +257,10 @@
           "request": {
             "method": "POST",
             "header": [
-              { "key": "Content-Type", "value": "application/json" }
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
             ],
             "body": {
               "mode": "raw",
@@ -191,8 +268,12 @@
             },
             "url": {
               "raw": "{{baseUrl}}/votacao",
-              "host": ["{{baseUrl}}"],
-              "path": ["votacao"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "votacao"
+              ]
             }
           }
         }
@@ -207,8 +288,12 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/eixos",
-              "host": ["{{baseUrl}}"],
-              "path": ["eixos"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eixos"
+              ]
             }
           }
         }
@@ -223,8 +308,12 @@
             "method": "GET",
             "url": {
               "raw": "{{baseUrl}}/dashboard",
-              "host": ["{{baseUrl}}"],
-              "path": ["dashboard"]
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "dashboard"
+              ]
             }
           }
         }

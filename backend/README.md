@@ -36,6 +36,7 @@ Swagger UI: http://localhost:8080/swagger-ui.html
 src/main/java/br/com/fatec/ods/
 ├── config/        # configurações (CORS, etc.)
 ├── controller/    # endpoints REST
+├── dto/           # estruturas de requests/responses
 ├── service/       # regras de negócio
 ├── repository/    # queries SQL (JdbcTemplate)
 └── model/         # classes de domínio

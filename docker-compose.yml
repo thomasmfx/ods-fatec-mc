@@ -7,4 +7,4 @@ services:
       environment:
         SWAGGER_JSON: /tmp/contract.yaml
       volumes:
-        - ./ods_api_contract.yaml:/tmp/contract.yaml:ro
+        - ./docs/ods_api_contract.yaml:/tmp/contract.yaml:ro

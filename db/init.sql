@@ -88,6 +88,7 @@ CREATE TABLE PARTICIPANTES (
     par_ors_id INT NOT NULL,
     par_rcr_id INT NOT NULL,
     par_cid_id INT NOT NULL,
+    par_cid_outro VARCHAR(200),
     par_autorizacao CHAR(1) NOT NULL,
     par_reg_id INT NOT NULL,
     par_itv_id INT NOT NULL,
