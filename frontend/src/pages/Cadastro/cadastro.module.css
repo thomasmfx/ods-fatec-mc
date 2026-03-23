@@ -31,7 +31,7 @@
   background: rgba(255, 255, 255, 0.2);
   border: none;
   padding: 6px 14px;
-  color: #fff;
+  color: #f0f0f0;
   border-radius: 20px;
   font-size: 13px;
   cursor: pointer;
@@ -77,4 +77,8 @@ span {
 
 .textarea {
   resize: vertical;
+}
+
+.loadingText {
+  padding: 2rem;
 }
