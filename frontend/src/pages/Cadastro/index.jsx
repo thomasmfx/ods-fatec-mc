@@ -108,7 +108,7 @@ export default function Cadastro() {
   if (loading)
     return (
       <div className="scroll">
-        <p style={{ padding: '2rem' }}>Carregando formulário...</p>
+        <p  className={styles.loadingText}>Carregando formulário...</p>
       </div>
     );
 
