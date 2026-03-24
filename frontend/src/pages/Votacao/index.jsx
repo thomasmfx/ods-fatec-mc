@@ -1,30 +1,55 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
+import api from "../../services/api" 
 import styles from "./votacao.module.css"
 import Hero from "../../components/Hero"
 import { THEMES } from "../../components/Hero/variants"
 
-const eixos = [
-    { id: 1, num: 'EIXO 1', titulo: 'Democracia e instituições fortes', variant: 'green', propostas: [{ id: 1, titulo: 'proposta A', descricao: 'dfhgv' }, { id: 2, titulo: 'proposta b', descricao: 'gvbcvb' }] },
-    { id: 2, num: 'EIXO 2', titulo: 'Sustentabilidade ambiental', variant: 'blue', propostas: [] },
-    { id: 3, num: 'EIXO 4', titulo: 'Inovação tecnológica sustentável', variant: 'orange', propostas: [] },
-    { id: 4, num: 'EIXO 5', titulo: 'Governança participativa', variant: 'purple', propostas: [] },
-]
-
 function getDotClass(i, eixoAtual, styles) {
     if (i === eixoAtual) return `${styles.dot} ${styles.dotCur}`
-    if (i < eixoAtual) return `${styles.dot} ${styles.dotDonbe}`
+    if (i < eixoAtual) return `${styles.dot} ${styles.dotDone}` // assumindo que era dotDone
     return `${styles.dot} ${styles.dotIdle}`
 }
 
 export default function Votacao() {
     const navigate = useNavigate()
+    const [eixos, setEixos] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [submitting, setSubmitting] = useState(false)
+    
     const [eixoAtual, setEixoAtual] = useState(0)
     const [votos, setVotos] = useState({})
+    const [participanteNome, setParticipanteNome] = useState("")
+
+    // 1. Busca os dados ao carregar a tela
+    useEffect(() => {
+        const partData = JSON.parse(sessionStorage.getItem('participante') || '{}')
+        setParticipanteNome(partData.nome || "Participante")
+
+        api.get('http://localhost:8080/eixos')
+            .then(res => {
+                const VARIANTS = ['green', 'blue', 'orange', 'purple']
+                const eixosMapeados = res.data.eixos.map((eixo, i) => ({
+                    ...eixo,
+                    variant: VARIANTS[i % VARIANTS.length]
+                }))
+                setEixos(eixosMapeados)
+            })
+            .catch(err => {
+                console.error("Erro ao buscar eixos:", err)
+                alert("Não foi possível carregar os eixos. Verifique sua conexão.")
+            })
+            .finally(() => {
+                setLoading(false)
+            })
+    }, [])
+
+    if (loading) return <div className="screen">Carregando propostas...</div>
+    if (eixos.length === 0) return <div className="screen">Nenhum eixo encontrado.</div>
 
     const eixo = eixos[eixoAtual]
     const votoAtual = votos[eixo.id]
-    const cor = THEMES[eixo.variant].bg
+    const cor = THEMES[eixo.variant]?.bg || '#000'
 
     function selecionar(propostaId) {
         setVotos(prev => ({ ...prev, [eixo.id]: propostaId }))
@@ -35,9 +60,29 @@ export default function Votacao() {
         else setEixoAtual(prev => prev - 1)
     }
 
-    function avancar() {
-        if (eixoAtual === eixos.length - 1) navigate('/Confirmacao')
-        else setEixoAtual(prev => prev + 1)
+    // 2. Dispara a API no último eixo
+    async function avancar() {
+        if (eixoAtual === eixos.length - 1) {
+            setSubmitting(true)
+            try {
+                const payload = {
+                    votos: Object.entries(votos).map(([eixoId, propostaId]) => ({
+                        eixoId: Number(eixoId),
+                        propostaId: Number(propostaId)
+                    }))
+                }
+                
+                await api.post('http://localhost:8080/votacao', payload)
+                navigate('/confirmacao')
+            } catch (error) {
+                console.error("Erro ao votar", error)
+                const msg = error.response?.data?.mensagem || "Ocorreu um erro ao registrar seu voto."
+                alert(msg)
+                setSubmitting(false)
+            }
+        } else {
+            setEixoAtual(prev => prev + 1)
+        }
     }
 
     return (
@@ -47,14 +92,14 @@ export default function Votacao() {
                     ODS <em>Mogi</em>
                 </div>
                 <div className={styles.headerParticipant}>
-                    Maria Silva
+                    {participanteNome}
                 </div>
             </div>
 
             <Hero variant={eixo.variant}>
                 <div className={styles.heroText}>
-                    <div className={styles.heroNum}>{eixo.num}</div>
-                    <div className={styles.heroTitle}>{eixo.titulo}</div>
+                    <div className={styles.heroNum}>{eixo.nome}</div> {/* Usa eixo.nome que vem da API */}
+                    <div className={styles.heroTitle}>{eixo.descricao}</div>
                 </div>
             </Hero>
 
@@ -63,8 +108,11 @@ export default function Votacao() {
                     <button
                         key={e.id}
                         className={getDotClass(i, eixoAtual, styles)}
-                        style={{ background: i <= eixoAtual ? THEMES[eixos[i].variant].bg : 'var(--border)' }}
-                        onClick={() => setEixoAtual(i)}
+                        style={{ background: i <= eixoAtual ? (THEMES[eixos[i].variant]?.bg || '#000') : 'var(--border)' }}
+                        onClick={() => {
+                            // Opcional: só permite pular para eixos anteriores ou para o próximo já liberado
+                            if (i <= eixoAtual || votos[eixos[i-1]?.id]) setEixoAtual(i)
+                        }}
                     />
                 ))}
             </div>
@@ -77,10 +125,7 @@ export default function Votacao() {
                         <div
                             key={proposta.id}
                             className={`${styles.card} ${selecionado ? styles.cardSel : ''}`}
-                            style={selecionado ? {
-                                borderColor: cor,
-                                background: cor + '14'
-                            } : {}}
+                            style={selecionado ? { borderColor: cor, background: cor + '14' } : {}}
                             onClick={() => selecionar(proposta.id)}
                             role="radio"
                             aria-checked={selecionado}
@@ -94,10 +139,7 @@ export default function Votacao() {
                         >
                             <div
                                 className={styles.radio}
-                                style={selecionado ? {
-                                    borderColor: cor,
-                                    background: cor
-                                } : {}}
+                                style={selecionado ? { borderColor: cor, background: cor } : {}}
                             >
                                 <div className={styles.rdot} />
                             </div>
@@ -111,16 +153,20 @@ export default function Votacao() {
             </div>
 
             <div className={styles.footer}>
-                <button className="btn btn-ghost" onClick={voltar}>← Voltar</button>
+                <button className="btn btn-ghost" onClick={voltar} disabled={submitting}>
+                    ← Voltar
+                </button>
                 <span className={styles.hint}>
                     {votoAtual ? '' : 'escolha para continuar'}
                 </span>
                 <button
                     className="btn btn-primary"
-                    disabled={!votoAtual}
+                    disabled={!votoAtual || submitting}
                     onClick={avancar}
                 >
-                    {eixoAtual === eixos.length - 1 ? 'Concluir →' : 'Próximo →'}
+                    {submitting 
+                        ? 'Enviando...' 
+                        : (eixoAtual === eixos.length - 1 ? 'Concluir →' : 'Próximo →')}
                 </button>
             </div>
         </div>
