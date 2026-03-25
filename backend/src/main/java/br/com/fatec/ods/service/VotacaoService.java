@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -30,7 +31,6 @@ public class VotacaoService {
     public VotacaoResponseDTO registrarVotos(Integer participanteId, VotacaoRequestDTO request) {
         List<VotoDTO> votos = request.votos();
 
-        // 1. Validação: Exatamente 4 votos e 1 por eixo [cite: 44, 46, 48]
         if (votos == null || votos.size() != 4) {
             throw new IllegalArgumentException("É necessário votar em exatamente 1 proposta por eixo.");
         }
@@ -39,14 +39,16 @@ public class VotacaoService {
             throw new IllegalArgumentException("Não é permitido votar mais de uma vez no mesmo eixo.");
         }
 
-        // 2. Validação: Participante já votou?
         Integer qtdVotosExistentes = jdbcTemplate.queryForObject(
                 "SELECT COUNT(*) FROM VOTACOES WHERE vot_par_id = ?", Integer.class, participanteId);
         if (qtdVotosExistentes != null && qtdVotosExistentes > 0) {
             throw new IllegalStateException("Este participante já registrou votos nesta conferência.");
         }
 
-        // 3. Persistir os votos no banco
+        if (request.email() != null && !request.email().isBlank()) {
+            jdbcTemplate.update("UPDATE PARTICIPANTES SET par_mail = ? WHERE par_id = ?", request.email(), participanteId);
+        }
+
         LocalDate dataAtual = LocalDate.now();
         for (VotoDTO voto : votos) {
             jdbcTemplate.update(
@@ -55,22 +57,21 @@ public class VotacaoService {
             );
         }
 
-        // 4. Buscar dados do participante para o certificado
         Map<String, Object> participante = jdbcTemplate.queryForMap(
                 "SELECT par_nome, par_mail FROM PARTICIPANTES WHERE par_id = ?", participanteId);
         String nome = (String) participante.get("par_nome");
         String email = (String) participante.get("par_mail");
 
-        // 5. Gerar PDF e disparar e-mail [cite: 53, 55]
+        String certificadoBase64 = null;
         try {
             byte[] pdf = certificadoService.gerarCertificadoPdf(nome);
             emailService.enviarCertificado(email, nome, pdf);
+            certificadoBase64 = Base64.getEncoder().encodeToString(pdf);
         } catch (Exception e) {
-            // Em um sistema real, poderíamos colocar isso numa fila, mas para o evento, vamos seguir.
             System.err.println("Erro ao gerar/enviar certificado para " + email + ": " + e.getMessage());
             throw new RuntimeException("Erro interno ao processar o certificado.");
         }
 
-        return new VotacaoResponseDTO("Votação concluída. Certificado enviado para " + email + ".", email);
+        return new VotacaoResponseDTO("Votação concluída. Certificado enviado para " + email + ".", email, certificadoBase64);
     }
 }

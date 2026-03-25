@@ -9,8 +9,8 @@ Java 21 + Spring Boot 4 + MySQL
 **Pré-requisitos:** Java 21
 ```bash
 cd backend
-cp src/main/resources/application-local.properties.example src/main/resources/application-local.properties
-# editar application-local.properties com as credenciais do banco
+cp src/main/resources/application.properties.example src/main/resources/application.properties
+# editar application.properties com as credenciais do banco
 ./mvnw spring-boot:run -Dspring-boot.run.profiles=local
 ```
 

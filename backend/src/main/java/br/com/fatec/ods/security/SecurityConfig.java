@@ -36,7 +36,8 @@ public class SecurityConfig {
                     "/eixos",
                     "/dashboard",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**"
+                    "/v3/api-docs/**",
+                    "/votacao"
                 ).permitAll()
 
                 // Tudo mais exige token válido
