@@ -108,7 +108,7 @@ export default function Cadastro() {
   if (loading)
     return (
       <div className="scroll">
-        <p  className={styles.loadingText}>Carregando formulário...</p>
+        <p className={styles.loadingText}>Carregando formulário...</p>
       </div>
     );
 

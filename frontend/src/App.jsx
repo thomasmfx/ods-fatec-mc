@@ -11,7 +11,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
-        <Route path="/votacao" element={<Votacao />} /> 
+        <Route path="/votacao" element={<Votacao />} />
         <Route path="/confirmacao" element={<Confirmacao />} />
         <Route path="/dashboard" element={<Dashboard />} /> 
       </Routes>

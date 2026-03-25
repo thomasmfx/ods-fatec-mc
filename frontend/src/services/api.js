@@ -11,13 +11,13 @@ api.interceptors.request.use((config) => {
 });
 
 api.interceptors.response.use(
-  (response) => response, 
+  (response) => response,
 
   (error) => {
     if (error.response?.status === 401) {
       sessionStorage.removeItem('sessaoToken');
       sessionStorage.removeItem('participante');
-      window.location.href = '/'; 
+      window.location.href = '/';
     }
     return Promise.reject(error);
   }
