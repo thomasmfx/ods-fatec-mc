@@ -3,7 +3,7 @@ import Login from './pages/Login';
 import Cadastro from './pages/Cadastro';
 import Votacao from './pages/Votacao';
 import Confirmacao from './pages/Confirmacao'
-// import Dashboard from './pages/Dashboard'
+import Dashboard from './pages/Dashboard'
 
 export default function App() {
   return (
@@ -13,7 +13,7 @@ export default function App() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/votacao" element={<Votacao />} /> 
         <Route path="/confirmacao" element={<Confirmacao />} />
-        {/* <Route path="/dashboard" element={<Dashboard />} /> */}
+        <Route path="/dashboard" element={<Dashboard />} /> 
       </Routes>
     </BrowserRouter>
   );
