@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
-import api from "../../services/api" 
+import api from "../../services/api"
 import styles from "./votacao.module.css"
 import Hero from "../../components/Hero"
 import { THEMES } from "../../components/Hero/variants"
 
 function getDotClass(i, eixoAtual, styles) {
     if (i === eixoAtual) return `${styles.dot} ${styles.dotCur}`
-    if (i < eixoAtual) return `${styles.dot} ${styles.dotDone}` // assumindo que era dotDone
+    if (i < eixoAtual) return `${styles.dot} ${styles.dotDone}`
     return `${styles.dot} ${styles.dotIdle}`
 }
 
@@ -16,17 +16,18 @@ export default function Votacao() {
     const [eixos, setEixos] = useState([])
     const [loading, setLoading] = useState(true)
     const [submitting, setSubmitting] = useState(false)
-    
+    const [modalOpen, setModalOpen] = useState(false)
     const [eixoAtual, setEixoAtual] = useState(0)
     const [votos, setVotos] = useState({})
-    const [participanteNome, setParticipanteNome] = useState("")
+    const [participante, setParticipante] = useState({ nome: "", email: "" })
+    const [emailEditavel, setEmailEditavel] = useState("")
 
-    // 1. Busca os dados ao carregar a tela
     useEffect(() => {
         const partData = JSON.parse(sessionStorage.getItem('participante') || '{}')
-        setParticipanteNome(partData.nome || "Participante")
+        setParticipante(partData)
+        setEmailEditavel(partData.email || "")
 
-        api.get('http://localhost:8080/eixos')
+        api.get('/eixos')
             .then(res => {
                 const VARIANTS = ['green', 'blue', 'orange', 'purple']
                 const eixosMapeados = res.data.eixos.map((eixo, i) => ({
@@ -35,13 +36,8 @@ export default function Votacao() {
                 }))
                 setEixos(eixosMapeados)
             })
-            .catch(err => {
-                console.error("Erro ao buscar eixos:", err)
-                alert("Não foi possível carregar os eixos. Verifique sua conexão.")
-            })
-            .finally(() => {
-                setLoading(false)
-            })
+            .catch(() => alert("Erro ao carregar eixos."))
+            .finally(() => setLoading(false))
     }, [])
 
     if (loading) return <div className="screen">Carregando propostas...</div>
@@ -60,28 +56,47 @@ export default function Votacao() {
         else setEixoAtual(prev => prev - 1)
     }
 
-    // 2. Dispara a API no último eixo
-    async function avancar() {
+    function avancar() {
         if (eixoAtual === eixos.length - 1) {
-            setSubmitting(true)
-            try {
-                const payload = {
-                    votos: Object.entries(votos).map(([eixoId, propostaId]) => ({
-                        eixoId: Number(eixoId),
-                        propostaId: Number(propostaId)
-                    }))
-                }
-                
-                await api.post('http://localhost:8080/votacao', payload)
-                navigate('/confirmacao')
-            } catch (error) {
-                console.error("Erro ao votar", error)
-                const msg = error.response?.data?.mensagem || "Ocorreu um erro ao registrar seu voto."
-                alert(msg)
-                setSubmitting(false)
-            }
+            setModalOpen(true)
         } else {
             setEixoAtual(prev => prev + 1)
+        }
+    }
+
+    async function confirmarVotacao() {
+        setSubmitting(true)
+        try {
+            const payload = {
+                email: emailEditavel,
+                votos: Object.entries(votos).map(([eixoId, propostaId]) => ({
+                    eixoId: Number(eixoId),
+                    propostaId: Number(propostaId)
+                }))
+            }
+            const res = await api.post('/votacao', payload)
+            
+            const sessionData = JSON.parse(sessionStorage.getItem('participante') || '{}')
+            sessionData.email = emailEditavel
+            sessionStorage.setItem('participante', JSON.stringify(sessionData))
+
+            let pdfUrl = null
+            if (res.data.certificadoBase64) {
+                const byteCharacters = atob(res.data.certificadoBase64)
+                const byteNumbers = new Array(byteCharacters.length)
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i)
+                }
+                const byteArray = new Uint8Array(byteNumbers)
+                const blob = new Blob([byteArray], { type: 'application/pdf' })
+                pdfUrl = URL.createObjectURL(blob)
+            }
+
+            navigate('/confirmacao', { state: { pdfUrl } })
+        } catch (error) {
+            alert(error.response?.data?.mensagem || "Erro ao registrar voto.")
+            setSubmitting(false)
+            setModalOpen(false)
         }
     }
 
@@ -92,13 +107,13 @@ export default function Votacao() {
                     ODS <em>Mogi</em>
                 </div>
                 <div className={styles.headerParticipant}>
-                    {participanteNome}
+                    {participante.nome || "Participante"}
                 </div>
             </div>
 
             <Hero variant={eixo.variant}>
                 <div className={styles.heroText}>
-                    <div className={styles.heroNum}>{eixo.nome}</div> {/* Usa eixo.nome que vem da API */}
+                    <div className={styles.heroNum}>{eixo.nome}</div>
                     <div className={styles.heroTitle}>{eixo.descricao}</div>
                 </div>
             </Hero>
@@ -108,9 +123,8 @@ export default function Votacao() {
                     <button
                         key={e.id}
                         className={getDotClass(i, eixoAtual, styles)}
-                        style={{ background: i <= eixoAtual ? (THEMES[eixos[i].variant]?.bg || '#000') : 'var(--border)' }}
+                        style={{ background: i <= eixoAtual ? cor : 'var(--border)' }}
                         onClick={() => {
-                            // Opcional: só permite pular para eixos anteriores ou para o próximo já liberado
                             if (i <= eixoAtual || votos[eixos[i-1]?.id]) setEixoAtual(i)
                         }}
                     />
@@ -127,15 +141,6 @@ export default function Votacao() {
                             className={`${styles.card} ${selecionado ? styles.cardSel : ''}`}
                             style={selecionado ? { borderColor: cor, background: cor + '14' } : {}}
                             onClick={() => selecionar(proposta.id)}
-                            role="radio"
-                            aria-checked={selecionado}
-                            tabIndex={0}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Enter' || e.key === ' ') {
-                                    selecionar(proposta.id)
-                                    e.preventDefault()
-                                }
-                            }}
                         >
                             <div
                                 className={styles.radio}
@@ -164,11 +169,39 @@ export default function Votacao() {
                     disabled={!votoAtual || submitting}
                     onClick={avancar}
                 >
-                    {submitting 
-                        ? 'Enviando...' 
-                        : (eixoAtual === eixos.length - 1 ? 'Concluir →' : 'Próximo →')}
+                    {eixoAtual === eixos.length - 1 ? 'Concluir →' : 'Próximo →'}
                 </button>
             </div>
+
+            {modalOpen && (
+                <div style={{ display: 'flex', position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+                    <div style={{ background: 'var(--surface)', borderRadius: '24px', padding: '28px 24px', width: '100%', maxWidth: '400px' }}>
+                        <div style={{ fontSize: '11px', letterSpacing: '0.09em', color: 'var(--text-muted)', marginBottom: '8px' }}>ANTES DE CONCLUIR</div>
+                        <h2 style={{ fontFamily: '"Fraunces", serif', fontSize: '20px', fontWeight: 600, marginBottom: '8px' }}>Verifique seu e-mail</h2>
+                        <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '20px' }}>
+                            Seu certificado será enviado para este endereço. Você pode corrigi-lo abaixo se necessário.
+                        </p>
+                        
+                        <div className="field" style={{ marginBottom: '24px' }}>
+                            <input 
+                                type="email" 
+                                value={emailEditavel}
+                                onChange={(e) => setEmailEditavel(e.target.value)}
+                                style={{ width: '100%', padding: '13px 16px', border: '1.5px solid var(--border)', borderRadius: '12px', fontSize: '15px' }}
+                            />
+                        </div>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                            <button className="btn btn-primary btn-full" disabled={submitting || !emailEditavel} onClick={confirmarVotacao} style={{ background: '#2d6a4f', color: '#fff' }}>
+                                {submitting ? 'Enviando...' : 'Confirmar e concluir'}
+                            </button>
+                            <button className="btn btn-ghost btn-full" disabled={submitting} onClick={() => setModalOpen(false)}>
+                                Voltar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     )
 }
