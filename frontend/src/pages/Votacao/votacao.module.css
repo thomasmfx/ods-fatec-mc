@@ -1,169 +1,175 @@
 .screen {
-    background: #f9f9f6;
+  background: #f9f9f6;
 }
 
 .header {
-    background: var(--surface);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 1px solid var(--border);
+  background: var(--surface);
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border);
 }
 
 .headerBrand {
-    font-family: 'Fraunces', serif;
-    font-size: 16px;
-    color: var(--green);
+  font-family: 'Fraunces', serif;
+  font-size: 16px;
+  color: var(--green);
 }
 
 .headerParticipant {
-    font-size: 12px;
-    color: var(--text-muted);
+  font-size: 12px;
+  color: var(--text-muted);
 }
 
 .heroText {
-    position: relative;
-    z-index: 2;
-    padding: 20px 0 0;
+  position: relative;
+  z-index: 2;
+  padding: 20px 0 0;
 }
 
 .heroNum {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: rgba(255, 255, 255, 0.7);
-    margin-bottom: 4px;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4px;
 }
 
 .heroTitle {
-    font-family: 'Fraunces', serif;
-    font-size: 21px;
-    font-weight: 600;
-    color: #fff;
-    line-height: 1.2;
+  font-family: 'Fraunces', serif;
+  font-size: 21px;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.2;
 }
 
 .dots {
-    display: flex;
-    gap: 6px;
-    padding: 16px 24px 0;
+  display: flex;
+  gap: 6px;
+  padding: 16px 24px 0;
 }
 
 .dot {
-    height: 6px;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: width 0.3s, background 0.3s;
-    width: 6px;
-    border: none;
-    padding: 0;
+  height: 6px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition:
+    width 0.3s,
+    background 0.3s;
+  width: 6px;
+  border: none;
+  padding: 0;
 }
 
 .dotCur {
-    width: 28px;
+  width: 28px;
 }
 
 .dotDone {
-    width: 6px;
+  width: 6px;
 }
 
 .dotIdle {
-    width: 6px;
-    opacity: 0.35;
+  width: 6px;
+  opacity: 0.35;
 }
 
 .propostas {
-    padding: 16px 20px;
-    flex: 1;
-    overflow-y: auto;
+  padding: 16px 20px;
+  flex: 1;
+  overflow-y: auto;
 }
 
 .label {
-    font-size: 11px;
-    letter-spacing: 0.09em;
-    color: var(--text-muted);
-    margin-bottom: 12px;
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
 }
 
 .card {
-    background: var(--surface);
-    border: 1.5px solid var(--border);
-    border-radius: 16px;
-    padding: 16px 18px;
-    cursor: pointer;
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    transition: border-color 0.2s, transform 0.15s;
-    margin-bottom: 10px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 16px;
+  padding: 16px 18px;
+  cursor: pointer;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  transition:
+    border-color 0.2s,
+    transform 0.15s;
+  margin-bottom: 10px;
 }
 
 .card:active {
-    transform: scale(0.99);
+  transform: scale(0.99);
 }
 
 .cardSel {
-    border-color: var(--green-mid);
-    background: var(--green-pale);
+  border-color: var(--green-mid);
+  background: var(--green-pale);
 }
 
 .card :global(h3) {
-    font-family: 'Fraunces', serif;
-    font-size: 15px;
-    font-weight: 600;
-    margin-bottom: 4px;
+  font-family: 'Fraunces', serif;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 
 .card :global(p) {
-    font-size: 13px;
-    color: var(--text-muted);
-    line-height: 1.5;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
 }
 
 .radio {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    border: 2px solid var(--border);
-    flex-shrink: 0;
-    margin-top: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: border-color 0.2s, background 0.2s;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    border-color 0.2s,
+    background 0.2s;
 }
 
 .cardSel .radio {
-    border-color: var(--green-mid);
-    background: var(--green-mid);
+  border-color: var(--green-mid);
+  background: var(--green-mid);
 }
 
 .rdot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #fff;
-    opacity: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  opacity: 0;
 }
 
 .cardSel .rdot {
-    opacity: 1;
+  opacity: 1;
 }
 
 .footer {
-    padding: 16px 20px;
-    background: var(--surface);
-    border-top: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .hint {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-style: italic;
-    flex: 1;
-    text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+  flex: 1;
+  text-align: center;
 }
