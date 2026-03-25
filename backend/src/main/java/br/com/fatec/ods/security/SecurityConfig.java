@@ -19,32 +19,25 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            // Desabilita CSRF — desnecessário para APIs stateless com JWT
+            // Esta linha é a chave: ela integra o seu CorsConfig com o Security
+            .cors(org.springframework.security.config.Customizer.withDefaults())
+            
             .csrf(csrf -> csrf.disable())
-
-            // Stateless: o Spring não vai criar/usar sessão HTTP
             .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-
             .authorizeHttpRequests(auth -> auth
-                // Rotas públicas — não precisam de token
                 .requestMatchers(
                     "/sessao/checkin",
                     "/sessao/cadastro",
                     "/sessao/opcoes",
-                    "/eixos",
+                    "/eixos/**",
                     "/dashboard",
                     "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/votacao"
+                    "/v3/api-docs/**"
                 ).permitAll()
-
-                // Tudo mais exige token válido
                 .anyRequest().authenticated()
             )
-
-            // Registra nosso filtro ANTES do filtro padrão de autenticação do Spring
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
