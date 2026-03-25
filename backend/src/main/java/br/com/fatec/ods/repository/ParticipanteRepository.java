@@ -59,7 +59,7 @@ public class ParticipanteRepository {
                 Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, req.getNome());
             ps.setString(2, req.getEmail());
-            ps.setString(3, req.getTelefone());
+            ps.setString(3, req.getTelefone().replaceAll("\\D", ""));
             ps.setDate(4, java.sql.Date.valueOf(req.getDataConferencia()));
             ps.setString(5, req.getRecursoAcessibilidade());
             ps.setString(6, req.getOcupacao());

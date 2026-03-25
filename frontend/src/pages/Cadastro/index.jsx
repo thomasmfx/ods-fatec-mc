@@ -91,8 +91,11 @@ export default function Cadastro() {
   async function handleSubmit() {
     setEnviando(true);
     setErro(null);
+    const formSanitized = form;
+    formSanitized.telefone = form.telefone.replaceAll(/\D/g, '');
+    
     try {
-      await api.post('/sessao/cadastro', form);
+      await api.post('/sessao/cadastro', formSanitized);
       navigate('/votacao');
     } catch (e) {
       if (e.response?.status === 409) {
