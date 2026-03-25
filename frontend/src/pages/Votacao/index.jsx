@@ -123,16 +123,20 @@ export default function Votacao() {
       </Hero>
 
       <div className={styles.dots}>
-        {eixos.map((e, i) => (
-          <button
-            key={e.id}
-            className={getDotClass(i, eixoAtual, styles)}
-            style={{ background: i <= eixoAtual ? cor : 'var(--border)' }}
-            onClick={() => {
-              if (i <= eixoAtual || votos[eixos[i - 1]?.id]) setEixoAtual(i);
-            }}
-          />
-        ))}
+        {eixos.map((e, i) => {
+          const corDoDot = THEMES[e.variant]?.bg || '#000';
+          
+          return (
+            <button
+              key={e.id}
+              className={getDotClass(i, eixoAtual, styles)}
+              style={{ background: i <= eixoAtual ? corDoDot : 'var(--border)' }}
+              onClick={() => {
+                if (i <= eixoAtual || votos[eixos[i - 1]?.id]) setEixoAtual(i);
+              }}
+            />
+          );
+        })}
       </div>
 
       <div className={styles.propostas}>
@@ -242,6 +246,11 @@ export default function Votacao() {
                 type="email"
                 value={emailEditavel}
                 onChange={(e) => setEmailEditavel(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && emailEditavel && !submitting) {
+                    confirmarVotacao();
+                  }
+                }}
                 style={{
                   width: '100%',
                   padding: '13px 16px',
