@@ -41,4 +41,13 @@ public class JwtService {
                 .getPayload()
                 .get("participanteId", Integer.class);
     }
+
+    public String extrairEmail(String token) {
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+    }
 }
