@@ -21,6 +21,9 @@ export default function Votacao() {
   const [votos, setVotos] = useState({});
   const [participante, setParticipante] = useState({ nome: '', email: '' });
   const [emailEditavel, setEmailEditavel] = useState('');
+  
+  // NOVO: Estado para gerenciar o erro visual dentro do modal
+  const [erroModal, setErroModal] = useState('');
 
   useEffect(() => {
     const partData = JSON.parse(sessionStorage.getItem('participante') || '{}');
@@ -68,6 +71,8 @@ export default function Votacao() {
 
   async function confirmarVotacao() {
     setSubmitting(true);
+    setErroModal(''); // Limpa erros anteriores ao tentar novamente
+
     try {
       const payload = {
         email: emailEditavel,
@@ -98,9 +103,10 @@ export default function Votacao() {
 
       navigate('/confirmacao', { state: { pdfUrl } });
     } catch (error) {
-      alert(error.response?.data?.mensagem || 'Erro ao registrar voto.');
+      // Pega a mensagem do backend ou usa uma genérica
+      setErroModal(error.response?.data?.mensagem || 'Erro ao registrar voto. Tente novamente.');
       setSubmitting(false);
-      setModalOpen(false);
+      // REMOVIDO: setModalOpen(false) - Mantém o modal aberto para o usuário ver o erro
     }
   }
 
@@ -241,11 +247,30 @@ export default function Votacao() {
               corrigi-lo abaixo se necessário.
             </p>
 
+            {/* CAIXA DE ERRO RENDERIZADA CONDICIONALMENTE */}
+            {erroModal && (
+              <div style={{
+                background: '#fee2e2',
+                color: '#b91c1c',
+                padding: '12px 16px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                marginBottom: '20px',
+                border: '1px solid #fca5a5',
+                lineHeight: '1.4'
+              }}>
+                <strong>Ocorreu um erro: </strong> {erroModal}
+              </div>
+            )}
+
             <div className="field" style={{ marginBottom: '24px' }}>
               <input
                 type="email"
                 value={emailEditavel}
-                onChange={(e) => setEmailEditavel(e.target.value)}
+                onChange={(e) => {
+                  setEmailEditavel(e.target.value);
+                  setErroModal(''); // Limpa o erro ao começar a digitar novamente
+                }}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' && emailEditavel && !submitting) {
                     confirmarVotacao();
@@ -254,9 +279,10 @@ export default function Votacao() {
                 style={{
                   width: '100%',
                   padding: '13px 16px',
-                  border: '1.5px solid var(--border)',
+                  border: `1.5px solid ${erroModal ? '#fca5a5' : 'var(--border)'}`, // Borda vermelha se der erro
                   borderRadius: '12px',
                   fontSize: '15px',
+                  outline: 'none'
                 }}
               />
             </div>
@@ -275,7 +301,10 @@ export default function Votacao() {
               <button
                 className="btn btn-ghost btn-full"
                 disabled={submitting}
-                onClick={() => setModalOpen(false)}
+                onClick={() => {
+                  setModalOpen(false);
+                  setErroModal(''); // Limpa o erro caso ele desista e volte
+                }}
               >
                 Voltar
               </button>
