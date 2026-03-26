@@ -100,7 +100,7 @@ export default function Dashboard() {
                                 <div key={proposta.titulo} className={styles.barItem}>
                                     <div className={styles.barLabel}>
                                         <span className={styles.barLabelText}>{proposta.titulo}</span>
-                                        <span className={styles.barLabelNum}>{proposta.votos} votos ({proposta.pct}%)</span>
+                                        <span className={styles.barLabelNum}>{`${proposta.votos} ${proposta.votos === 1 ? 'voto' : 'votos'}`} ({proposta.pct}%)</span>
                                     </div>
                                     <div className={styles.barTrack}>
                                         <div
