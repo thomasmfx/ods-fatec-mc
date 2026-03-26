@@ -1,73 +1,68 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
-import styles from "./dashboard.module.css"
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import api from "../../services/api";
+import styles from "./dashboard.module.css";
 
-const eixos = [
-    {
-        id: 1,
-        num: 'EIXO 01',
-        nome: 'Democracia e instituições fortes',
-        cor: '#9fe1cb',
-        barCor: '#52b788',
-        propostas: [
-            { titulo: 'Conselhos municipais digitais', votos: 98, pct: 79 },
-            { titulo: 'Educação política nas escolas', votos: 82, pct: 66 },
-        ]
-    },
-    {
-        id: 2,
-        num: 'EIXO 02',
-        nome: 'Sustentabilidade ambiental',
-        cor: '#64b5f6',
-        barCor: '#42a5f5',
-        propostas: [
-            { titulo: 'Recuperação de matas ciliares', votos: 112, pct: 90 },
-            { titulo: 'Energia solar em equipamentos públicos', votos: 79, pct: 64 },
-        ]
-    },
-    {
-        id: 4,
-        num: 'EIXO 04',
-        nome: 'Inovação tecnológica sustentável',
-        cor: '#ffb74d',
-        barCor: '#ff8f00',
-        propostas: [
-            { titulo: 'Inclusão digital nas comunidades', votos: 103, pct: 83 },
-            { titulo: 'Parque tecnológico regional', votos: 88, pct: 71 },
-        ]
-    },
-    {
-        id: 5,
-        num: 'EIXO 05',
-        nome: 'Governança participativa',
-        cor: '#ce93d8',
-        barCor: '#ab47bc',
-        propostas: [
-            { titulo: 'Transparência nos contratos públicos', votos: 95, pct: 77 },
-            { titulo: 'Conferências municipais temáticas', votos: 76, pct: 61 },
-        ]
-    },
-]
-
-const totalParticipantes = 247
-const totalVotos = 988
+// Tabela de cores para manter o mesmo padrão visual do Votacao.jsx
+const THEMES = [
+    { cor: '#9fe1cb', barCor: '#52b788' },
+    { cor: '#64b5f6', barCor: '#42a5f5' },
+    { cor: '#ffb74d', barCor: '#ff8f00' },
+    { cor: '#ce93d8', barCor: '#ab47bc' }
+];
 
 export default function Dashboard() {
-    const navigate = useNavigate()
-    const [barWidths, setBarWidths] = useState({})
+    const navigate = useNavigate();
+    const [dados, setDados] = useState(null);
+    const [barWidths, setBarWidths] = useState({});
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            const widths = {}
-            eixos.forEach(e => {
-                e.propostas.forEach(p => {
-                    widths[`${e.id}-${p.titulo}`] = p.pct
-                })
+        api.get('/dashboard')
+            .then(res => {
+                const { totalParticipantes, totalVotos, eixos } = res.data;
+
+                // Prepara os dados adicionando as cores e calculando a porcentagem (%)
+                const eixosFormatados = eixos.map((eixo, i) => {
+                    const theme = THEMES[i % THEMES.length];
+                    // Descobre quantos votos o eixo teve no total para fazer a regra de 3
+                    const totalEixo = eixo.propostas.reduce((acc, p) => acc + p.votos, 0);
+
+                    return {
+                        ...eixo,
+                        cor: theme.cor,
+                        barCor: theme.barCor,
+                        propostas: eixo.propostas.map(p => ({
+                            ...p,
+                            pct: totalEixo > 0 ? ((p.votos / totalEixo) * 100).toFixed(1) : 0
+                        }))
+                    };
+                });
+
+                setDados({
+                    totalParticipantes,
+                    totalVotos,
+                    eixos: eixosFormatados
+                });
+
+                // Dispara a animação das barras após os dados carregarem
+                setTimeout(() => {
+                    const widths = {};
+                    eixosFormatados.forEach(e => {
+                        e.propostas.forEach(p => {
+                            widths[`${e.id}-${p.titulo}`] = p.pct;
+                        });
+                    });
+                    setBarWidths(widths);
+                }, 200);
             })
-            setBarWidths(widths)
-        }, 200)
-        return () => clearTimeout(timer)
-    }, [])
+            .catch(err => console.error("Erro ao carregar dashboard:", err))
+            .finally(() => setLoading(false));
+    }, []);
+
+    if (loading || !dados) {
+        return <div className={`screen active ${styles.screen}`}>Carregando resultados ao vivo...</div>;
+    }
 
     return (
         <div className={`screen active ${styles.screen}`} id="screen-dashboard">
@@ -81,21 +76,21 @@ export default function Dashboard() {
             <div className={styles.scroll}>
                 <div className={styles.stats}>
                     <div className={styles.statCard}>
-                        <div className={styles.statNum}>{totalParticipantes}</div>
+                        <div className={styles.statNum}>{dados.totalParticipantes}</div>
                         <div className={styles.statLabel}>PARTICIPANTES</div>
                     </div>
                     <div className={styles.statCard}>
-                        <div className={styles.statNum}>{totalVotos}</div>
+                        <div className={styles.statNum}>{dados.totalVotos}</div>
                         <div className={styles.statLabel}>VOTOS REGISTRADOS</div>
                     </div>
                     <div className={styles.statCard}>
-                        <div className={styles.statNum}>4</div>
+                        <div className={styles.statNum}>{dados.eixos.length}</div>
                         <div className={styles.statLabel}>EIXOS TEMÁTICOS</div>
                     </div>
                 </div>
 
                 <div className={styles.grid}>
-                    {eixos.map(eixo => (
+                    {dados.eixos.map(eixo => (
                         <div key={eixo.id}>
                             <div className={styles.eixoLabel}>{eixo.num}</div>
                             <div className={styles.eixoTitle} style={{ color: eixo.cor }}>
@@ -105,7 +100,7 @@ export default function Dashboard() {
                                 <div key={proposta.titulo} className={styles.barItem}>
                                     <div className={styles.barLabel}>
                                         <span className={styles.barLabelText}>{proposta.titulo}</span>
-                                        <span className={styles.barLabelNum}>{proposta.votos}</span>
+                                        <span className={styles.barLabelNum}>{proposta.votos} votos ({proposta.pct}%)</span>
                                     </div>
                                     <div className={styles.barTrack}>
                                         <div
@@ -123,9 +118,9 @@ export default function Dashboard() {
                 </div>
 
                 <div className={styles.backLink}>
-                    <button onClick={() => navigate('/')}>← Voltar ao início</button>
+                    <button className="btn btn-ghost" onClick={() => navigate('/')}>← Voltar ao início</button>
                 </div>
             </div>
         </div>
-    )
+    );
 }
