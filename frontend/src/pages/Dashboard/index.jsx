@@ -67,10 +67,10 @@ export default function Dashboard() {
     return (
         <div className={`screen active ${styles.screen}`} id="screen-dashboard">
             <div className={styles.top}>
-                <div className={styles.brand}>
-                    ODS <em>Mogi</em> — Resultados ao vivo
+                <div className={styles.brand}>  
+                    ODS <em>Mogi</em> — Resultados
                 </div>
-                <div className={styles.liveDot}>transmissão ao vivo</div>
+                <div className={styles.liveDot}>Ao vivo</div>
             </div>
 
             <div className={styles.scroll}>

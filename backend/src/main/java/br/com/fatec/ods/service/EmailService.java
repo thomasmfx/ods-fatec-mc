@@ -29,7 +29,7 @@ public class EmailService {
                 "Olá, %s!\n\nAgradecemos a sua participação na 1ª Conferência Nacional ODS.\n\n" +
                 "Segue em anexo o seu certificado de participação.\n\n" +
                 "Atenciosamente,\nEquipe ODS Fatec",
-                nomeParticipante.split("")[0]
+                nomeParticipante.split(" ")[0]
             );
             
             helper.setText(corpo);
