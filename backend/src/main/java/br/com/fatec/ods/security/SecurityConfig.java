@@ -33,6 +33,9 @@ public class SecurityConfig {
                     "/sessao/opcoes",
                     "/eixos/**",
                     "/dashboard",
+                    "/propostas",
+                    "/propostas/**",
+                    "/propostas/auth",
                     "/swagger-ui/**",
                     "/v3/api-docs/**"
                 ).permitAll()
