@@ -3,6 +3,10 @@ package br.com.fatec.ods.service;
 import br.com.fatec.ods.dto.request.VotacaoRequestDTO;
 import br.com.fatec.ods.dto.request.VotoDTO;
 import br.com.fatec.ods.dto.response.VotacaoResponseDTO;
+import br.com.fatec.ods.exception.RegraNegocioException;
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,19 +18,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class VotacaoService {
 
     private final JdbcTemplate jdbcTemplate;
     private final CertificadoService certificadoService;
-
-    public VotacaoService(JdbcTemplate jdbcTemplate, CertificadoService certificadoService) {
-        this.jdbcTemplate = jdbcTemplate;
-        this.certificadoService = certificadoService;
-    }
+    @Value("${evento.ativo:true}")
+    private Boolean eventoAtivo;
 
     @Transactional
     public VotacaoResponseDTO registrarVotos(Integer participanteId, VotacaoRequestDTO request) {
+        if (Boolean.FALSE.equals(eventoAtivo)) {
+            throw new RegraNegocioException("As votações estão encerradas!");
+        }
+
         List<VotoDTO> votos = request.votos();
 
         if (votos == null || votos.size() != 4) {
