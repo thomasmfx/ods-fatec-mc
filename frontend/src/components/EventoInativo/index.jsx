@@ -58,7 +58,7 @@ export default function EventoInativo() {
         <button 
           className="btn btn-primary btn-full" 
           onClick={() => navigate('/dashboard')}
-          style={{ padding: '16px', fontSize: '16px', fontWeight: 600 }}
+          style={{ padding: '16px', fontSize: '16px', fontWeight: 500 }}
         >
           Ver Resultados ao Vivo
         </button>
