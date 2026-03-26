@@ -22,5 +22,5 @@ public class Participante {
     private Integer regId;
     private Integer itvId;
     private String itvOutro;
-    // getters/setters ou use Lombok @Data
+    private Boolean certEnviado;
 }

@@ -3,8 +3,6 @@ package br.com.fatec.ods.dto.request;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import lombok.Data;
 
 @Data

@@ -270,7 +270,7 @@ export default function Votacao() {
                 onClick={confirmarVotacao}
                 style={{ background: '#2d6a4f', color: '#fff' }}
               >
-                {submitting ? 'Enviando...' : 'Confirmar e concluir'}
+                {submitting ? 'Concluindo...' : 'Confirmar e concluir'}
               </button>
               <button
                 className="btn btn-ghost btn-full"

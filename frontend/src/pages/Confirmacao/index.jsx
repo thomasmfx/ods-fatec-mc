@@ -29,7 +29,7 @@ export default function Confirmacao() {
           <p>
             Obrigado pela sua participação.
             <br />
-            Seu certificado foi gerado e será enviado por e-mail.
+            Seu certificado foi gerado e será enviado por e-mail em breve.
           </p>
         </div>
       </Hero>
@@ -39,7 +39,7 @@ export default function Confirmacao() {
           <div className={styles.confRow}>
             <div className={styles.confIcon}>✉️</div>
             <div className={styles.confRowBody}>
-              <strong>Certificado enviado para</strong>
+              <strong>O certificado será enviado para</strong>
               <span className={styles.emailHighlight}>
                 {participante.email}
               </span>

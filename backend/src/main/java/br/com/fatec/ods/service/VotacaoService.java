@@ -19,12 +19,10 @@ public class VotacaoService {
 
     private final JdbcTemplate jdbcTemplate;
     private final CertificadoService certificadoService;
-    private final EmailService emailService;
 
-    public VotacaoService(JdbcTemplate jdbcTemplate, CertificadoService certificadoService, EmailService emailService) {
+    public VotacaoService(JdbcTemplate jdbcTemplate, CertificadoService certificadoService) {
         this.jdbcTemplate = jdbcTemplate;
         this.certificadoService = certificadoService;
-        this.emailService = emailService;
     }
 
     @Transactional
@@ -65,13 +63,12 @@ public class VotacaoService {
         String certificadoBase64 = null;
         try {
             byte[] pdf = certificadoService.gerarCertificadoPdf(nome);
-            emailService.enviarCertificado(email, nome, pdf);
             certificadoBase64 = Base64.getEncoder().encodeToString(pdf);
         } catch (Exception e) {
-            System.err.println("Erro ao gerar/enviar certificado para " + email + ": " + e.getMessage());
+            System.err.println("Erro ao gerar certificado para " + email + ": " + e.getMessage());
             throw new RuntimeException("Erro interno ao processar o certificado.");
         }
 
-        return new VotacaoResponseDTO("Votação concluída. Certificado enviado para " + email + ".", email, certificadoBase64);
+        return new VotacaoResponseDTO("Votação concluída.", email, certificadoBase64);
     }
 }
