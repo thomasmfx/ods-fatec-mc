@@ -1,0 +1,11 @@
+spring.application.name=
+server.port=
+springdoc.swagger-ui.path=
+evento.ativo=
+cors.allowed-origins=
+
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+spring.datasource.driver-class-name=
+jwt.secret=

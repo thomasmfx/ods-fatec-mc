@@ -1,0 +1,84 @@
+.screen {
+  background: var(--surface-2);
+}
+
+.cadastroHero {
+  background: var(--green-mid);
+  padding: 32px 24px 24px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+
+.cadastroHero :global(h1) {
+  font-family: 'Fraunces', serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+.cadastroHero :global(p) {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.btnBack {
+  margin-bottom: 16px;
+}
+
+.btnBack button {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 6px 14px;
+  color: #f0f0f0;
+  border-radius: 20px;
+  font-size: 13px;
+  cursor: pointer;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.btnBack button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.formSection {
+  margin-bottom: 28px;
+}
+
+.formSectionTitle {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.twoCol {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cadastroFooter {
+  padding: 16px 24px;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+}
+
+span {
+  font-size: 14px;
+}
+.textSpan {
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.textarea {
+  resize: vertical;
+}
+
+.loadingText {
+  padding: 2rem;
+}
