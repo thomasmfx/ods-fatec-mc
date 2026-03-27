@@ -17,6 +17,14 @@
   color: var(--green);
 }
 
+.headerBtn {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
 .headerParticipant {
   font-size: 12px;
   color: var(--text-muted);
@@ -172,4 +180,49 @@
   font-style: italic;
   flex: 1;
   text-align: center;
+}
+
+.autor {
+  display: block;
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.delegacao {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.delegacaoTitle {
+  font-size: 11px;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.delegacaoList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.delegacaoItem {
+  display: flex;
+  gap: 8px;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.delegacaoRole {
+  color: var(--text-muted);
+  flex-shrink: 0;
+  min-width: 90px;
+}
+
+.delegacaoName {
+  color: var(--text);
+  font-weight: 500;
 }

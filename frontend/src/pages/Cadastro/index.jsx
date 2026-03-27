@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Hero from '../../components/Hero';
+import Loading from '../../components/Loading';
 import api from '../../services/api';
 import styles from './cadastro.module.css';
 import { isFormularioValido, eixos } from './cadastroUtils.js';
@@ -110,12 +111,7 @@ export default function Cadastro() {
     }
   }
 
-  if (loading)
-    return (
-      <div className="scroll">
-        <p className={styles.loadingText}>Carregando formulário...</p>
-      </div>
-    );
+  if (loading) return <Loading texto="Carregando formulário..." />;
 
   return (
     <div className={`screen active ${styles.screen}`} id="screen-cadastro">

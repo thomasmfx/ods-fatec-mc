@@ -14,7 +14,8 @@ api.interceptors.response.use(
   (response) => response,
 
   (error) => {
-    if (error.response?.status === 401) {
+    const url = error.config?.url || '';
+    if (error.response?.status === 401 && !url.startsWith('/propostas')) {
       sessionStorage.removeItem('sessaoToken');
       sessionStorage.removeItem('participante');
       window.location.href = '/';

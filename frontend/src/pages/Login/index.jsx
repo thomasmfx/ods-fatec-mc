@@ -84,6 +84,10 @@ export default function Login() {
           Ver resultados ao vivo →
         </button>
       </div>
+
+      <button onClick={() => navigate('/admin')} className={styles.adminLink}>
+        Painel de gestão
+      </button>
     </div>
   );
 }

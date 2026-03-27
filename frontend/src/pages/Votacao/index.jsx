@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import styles from './votacao.module.css';
 import Hero from '../../components/Hero';
+import Loading from '../../components/Loading';
 import { THEMES } from '../../components/Hero/variants';
 
 function getDotClass(i, eixoAtual, styles) {
@@ -44,7 +45,7 @@ export default function Votacao() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="screen">Carregando propostas...</div>;
+  if (loading) return <Loading texto="Carregando propostas..." />;
   if (eixos.length === 0)
     return <div className="screen">Nenhum eixo encontrado.</div>;
 
@@ -117,7 +118,12 @@ export default function Votacao() {
     <div className={`screen active ${styles.screen}`} id="screen-votacao">
       <div className={styles.header}>
         <div className={styles.headerBrand}>
-          ODS <em>Mogi</em>
+          <button className={styles.headerBtn} onClick={() => {
+            navigate('/');
+            sessionStorage.clear();
+          }}>
+            ODS <em>Mogi</em>
+          </button>
         </div>
         <div className={styles.headerParticipant}>
           {participante.nome || 'Participante'}
@@ -171,11 +177,36 @@ export default function Votacao() {
               </div>
               <div>
                 <h3>{proposta.titulo}</h3>
+                {proposta.autor && (
+                  <span className={styles.autor}>Autor: {proposta.autor}</span>
+                )}
                 <p>{proposta.descricao}</p>
               </div>
             </div>
           );
         })}
+
+        <div className={styles.delegacao}>
+          <div className={styles.delegacaoTitle}>DELEGAÇÃO</div>
+          <div className={styles.delegacaoList}>
+            <div className={styles.delegacaoItem}>
+              <span className={styles.delegacaoRole}>Delegada</span>
+              <span className={styles.delegacaoName}>Cristiane Brandão dos Santos</span>
+            </div>
+            <div className={styles.delegacaoItem}>
+              <span className={styles.delegacaoRole}>1º Suplente</span>
+              <span className={styles.delegacaoName}>Roberto de Andrade Bordin</span>
+            </div>
+            <div className={styles.delegacaoItem}>
+              <span className={styles.delegacaoRole}>2ª Suplente</span>
+              <span className={styles.delegacaoName}>Mariangela Ferreira Fuentes Molina</span>
+            </div>
+            <div className={styles.delegacaoItem}>
+              <span className={styles.delegacaoRole}>3ª Suplente</span>
+              <span className={styles.delegacaoName}>Areta Lúcia da Silva</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className={styles.footer}>

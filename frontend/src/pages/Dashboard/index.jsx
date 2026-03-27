@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
+import Loading from '../../components/Loading';
 import styles from './dashboard.module.css';
 
 // Tabela de cores para manter o mesmo padrão visual do Votacao.jsx
@@ -62,11 +63,7 @@ export default function Dashboard() {
   }, []);
 
   if (loading || !dados) {
-    return (
-      <div className={`screen active ${styles.screen}`}>
-        Carregando resultados ao vivo...
-      </div>
-    );
+    return <Loading texto="Carregando resultados ao vivo..." className={styles.screen} />;
   }
 
   return (
