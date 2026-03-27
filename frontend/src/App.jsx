@@ -15,9 +15,18 @@ export default function App() {
       <Routes>
         {/* Se o evento estiver ativo, renderiza a página. Se não, joga pro EventoInativo */}
         <Route path="/" element={eventoAtivo ? <Login /> : <EventoInativo />} />
-        <Route path="/cadastro" element={eventoAtivo ? <Cadastro /> : <EventoInativo />} />
-        <Route path="/votacao" element={eventoAtivo ? <Votacao /> : <EventoInativo />} />
-        <Route path="/confirmacao" element={eventoAtivo ? <Confirmacao /> : <EventoInativo />} />
+        <Route
+          path="/cadastro"
+          element={eventoAtivo ? <Cadastro /> : <EventoInativo />}
+        />
+        <Route
+          path="/votacao"
+          element={eventoAtivo ? <Votacao /> : <EventoInativo />}
+        />
+        <Route
+          path="/confirmacao"
+          element={eventoAtivo ? <Confirmacao /> : <EventoInativo />}
+        />
         {/* O Dashboard fica aberto independente do status do evento */}
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/admin" element={<AdminPropostas />} />

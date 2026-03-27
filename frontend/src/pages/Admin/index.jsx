@@ -8,7 +8,9 @@ export default function AdminPropostas() {
 
   // Estados de Autenticação
   const [secret, setSecret] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(!!sessionStorage.getItem('adminSecret'));
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!sessionStorage.getItem('adminSecret')
+  );
   const [authErro, setAuthErro] = useState('');
   const [isChecking, setIsChecking] = useState(false);
 
@@ -20,14 +22,14 @@ export default function AdminPropostas() {
   const [form, setForm] = useState({
     eixoId: '',
     titulo: '',
-    descricao: ''
+    descricao: '',
   });
 
   // Estado da Modal de Exclusão
   const [modalDelete, setModalDelete] = useState({
     isOpen: false,
     id: null,
-    titulo: ''
+    titulo: '',
   });
 
   // Busca os eixos e propostas assim que estiver autenticado
@@ -43,7 +45,10 @@ export default function AdminPropostas() {
       const res = await api.get('/eixos');
       setEixos(res.data.eixos);
     } catch (err) {
-      setMensagem({ texto: 'Erro ao carregar eixos e propostas.', tipo: 'erro' });
+      setMensagem({
+        texto: 'Erro ao carregar eixos e propostas.',
+        tipo: 'erro',
+      });
     } finally {
       setLoadingEixos(false);
     }
@@ -58,7 +63,7 @@ export default function AdminPropostas() {
 
     try {
       await api.get('/propostas/auth', {
-        headers: { 'X-Admin-Secret': secret }
+        headers: { 'X-Admin-Secret': secret },
       });
 
       sessionStorage.setItem('adminSecret', secret);
@@ -85,7 +90,7 @@ export default function AdminPropostas() {
   async function handleSubmit(e) {
     e.preventDefault();
     const adminSecret = sessionStorage.getItem('adminSecret');
-    
+
     if (!adminSecret) {
       handleLogout();
       return;
@@ -95,15 +100,22 @@ export default function AdminPropostas() {
     setMensagem({ texto: '', tipo: '' });
 
     try {
-      await api.post('/propostas', {
-        eixoId: Number(form.eixoId),
-        titulo: form.titulo,
-        descricao: form.descricao
-      }, {
-        headers: { 'X-Admin-Secret': adminSecret }
-      });
+      await api.post(
+        '/propostas',
+        {
+          eixoId: Number(form.eixoId),
+          titulo: form.titulo,
+          descricao: form.descricao,
+        },
+        {
+          headers: { 'X-Admin-Secret': adminSecret },
+        }
+      );
 
-      setMensagem({ texto: 'Proposta cadastrada com sucesso!', tipo: 'sucesso' });
+      setMensagem({
+        texto: 'Proposta cadastrada com sucesso!',
+        tipo: 'sucesso',
+      });
       setForm({ eixoId: '', titulo: '', descricao: '' });
       await carregarDados();
     } catch (err) {
@@ -111,9 +123,9 @@ export default function AdminPropostas() {
         setAuthErro('Sessão expirada ou senha inválida.');
         handleLogout();
       } else {
-        setMensagem({ 
-          texto: err.response?.data?.mensagem || 'Erro ao cadastrar proposta.', 
-          tipo: 'erro' 
+        setMensagem({
+          texto: err.response?.data?.mensagem || 'Erro ao cadastrar proposta.',
+          tipo: 'erro',
         });
       }
     } finally {
@@ -126,7 +138,7 @@ export default function AdminPropostas() {
     setModalDelete({
       isOpen: true,
       id,
-      titulo
+      titulo,
     });
   }
 
@@ -136,16 +148,16 @@ export default function AdminPropostas() {
 
     try {
       await api.delete(`/propostas/${modalDelete.id}`, {
-        headers: { 'X-Admin-Secret': adminSecret }
+        headers: { 'X-Admin-Secret': adminSecret },
       });
-      
+
       setMensagem({ texto: 'Proposta removida com sucesso.', tipo: 'sucesso' });
       setModalDelete({ isOpen: false, id: null, titulo: '' });
       await carregarDados();
     } catch (err) {
-      setMensagem({ 
-        texto: err.response?.data?.mensagem || 'Erro ao excluir proposta.', 
-        tipo: 'erro' 
+      setMensagem({
+        texto: err.response?.data?.mensagem || 'Erro ao excluir proposta.',
+        tipo: 'erro',
       });
       setModalDelete({ isOpen: false, id: null, titulo: '' });
     } finally {
@@ -159,18 +171,23 @@ export default function AdminPropostas() {
       <div className={`screen active ${styles.screen}`}>
         <div className={styles.loginCard} style={{ marginTop: '100px' }}>
           <h2>Área Restrita</h2>
-          <p className={styles.sub}>Coordenação — 1ª Conferência Nacional ODS</p>
-          
+          <p className={styles.sub}>
+            Coordenação — 1ª Conferência Nacional ODS
+          </p>
+
           <form onSubmit={handleLogin}>
             <div className="field" style={{ marginBottom: '20px' }}>
-              <label className="field-label" style={{ marginBottom: '8px', display: 'block' }}>
+              <label
+                className="field-label"
+                style={{ marginBottom: '8px', display: 'block' }}
+              >
                 Senha de Admin
               </label>
               <input
                 type="password"
                 placeholder="Digite a senha..."
                 value={secret}
-                onChange={e => {
+                onChange={(e) => {
                   setSecret(e.target.value);
                   setAuthErro('');
                 }}
@@ -178,30 +195,39 @@ export default function AdminPropostas() {
                   width: '100%',
                   padding: '14px 16px',
                   borderRadius: '12px',
-                  border: authErro ? '1.5px solid #fca5a5' : '1.5px solid var(--border)',
+                  border: authErro
+                    ? '1.5px solid #fca5a5'
+                    : '1.5px solid var(--border)',
                   backgroundColor: authErro ? '#fef2f2' : 'var(--surface)',
                   fontSize: '15px',
-                  outline: 'none'
+                  outline: 'none',
                 }}
               />
             </div>
-            
+
             {authErro && (
-              <p style={{ color: '#dc2626', fontSize: '13px', marginTop: '-12px', marginBottom: '16px' }}>
+              <p
+                style={{
+                  color: '#dc2626',
+                  fontSize: '13px',
+                  marginTop: '-12px',
+                  marginBottom: '16px',
+                }}
+              >
                 {authErro}
               </p>
             )}
-            
-            <button 
-              type="submit" 
+
+            <button
+              type="submit"
               className="btn btn-primary btn-full"
               disabled={!secret || isChecking}
             >
               {isChecking ? 'Verificando...' : 'Acessar →'}
             </button>
-            <button 
-              type="button" 
-              className="btn btn-ghost btn-full" 
+            <button
+              type="button"
+              className="btn btn-ghost btn-full"
               onClick={() => navigate('/')}
               style={{ marginTop: '10px' }}
             >
@@ -215,41 +241,81 @@ export default function AdminPropostas() {
 
   // ================= TELA PRINCIPAL DO ADMIN =================
   return (
-    <div className={`screen active ${styles.screen}`} style={{ overflowY: 'auto' }}>
-      <div className={styles.loginCard} style={{ margin: '24px 20px', paddingBottom: '30px' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+    <div
+      className={`screen active ${styles.screen}`}
+      style={{ overflowY: 'auto' }}
+    >
+      <div
+        className={styles.loginCard}
+        style={{ margin: '24px 20px', paddingBottom: '30px' }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '16px',
+          }}
+        >
           <h2 style={{ fontFamily: '"Fraunces", serif' }}>Painel de Gestão</h2>
-          <button onClick={handleLogout} className="btn btn-ghost" style={{ padding: '4px 12px', fontSize: '12px' }}>
+          <button
+            onClick={handleLogout}
+            className="btn btn-ghost"
+            style={{ padding: '4px 12px', fontSize: '12px' }}
+          >
             Sair
           </button>
         </div>
-        
-        <p className={styles.sub}>Adicione ou remova propostas para o evento nos dias 28/03 e 04/04.</p>
+
+        <p className={styles.sub}>
+          Adicione ou remova propostas para o evento nos dias 28/03 e 04/04.
+        </p>
 
         {mensagem.texto && (
-          <div style={{
-            background: mensagem.tipo === 'sucesso' ? '#dcfce7' : '#fee2e2',
-            color: mensagem.tipo === 'sucesso' ? '#166534' : '#b91c1c',
-            padding: '12px', borderRadius: '8px', marginBottom: '20px', fontSize: '14px',
-            border: `1px solid ${mensagem.tipo === 'sucesso' ? '#bbf7d0' : '#fecaca'}`
-          }}>
+          <div
+            style={{
+              background: mensagem.tipo === 'sucesso' ? '#dcfce7' : '#fee2e2',
+              color: mensagem.tipo === 'sucesso' ? '#166534' : '#b91c1c',
+              padding: '12px',
+              borderRadius: '8px',
+              marginBottom: '20px',
+              fontSize: '14px',
+              border: `1px solid ${mensagem.tipo === 'sucesso' ? '#bbf7d0' : '#fecaca'}`,
+            }}
+          >
             {mensagem.texto}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} style={{ background: '#f9f9f6', padding: '20px', borderRadius: '16px', border: '1px solid var(--border)' }}>
-          <h3 style={{ fontSize: '15px', marginBottom: '15px' }}>Cadastrar Proposta</h3>
-          
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            background: '#f9f9f6',
+            padding: '20px',
+            borderRadius: '16px',
+            border: '1px solid var(--border)',
+          }}
+        >
+          <h3 style={{ fontSize: '15px', marginBottom: '15px' }}>
+            Cadastrar Proposta
+          </h3>
+
           <div className="field" style={{ marginBottom: '16px' }}>
             <label className="field-label">Eixo ODS</label>
-            <select 
+            <select
               required
               value={form.eixoId}
-              onChange={e => setForm({...form, eixoId: e.target.value})}
-              style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1.5px solid var(--border)', background: '#fff' }}
+              onChange={(e) => setForm({ ...form, eixoId: e.target.value })}
+              style={{
+                width: '100%',
+                padding: '12px',
+                borderRadius: '12px',
+                border: '1.5px solid var(--border)',
+                background: '#fff',
+              }}
             >
               <option value="">Selecione o eixo...</option>
-              {eixos.map(eixo => (
+              {eixos.map((eixo) => (
                 <option key={eixo.id} value={eixo.id}>
                   {eixo.nome} - {eixo.descricao}
                 </option>
@@ -264,7 +330,7 @@ export default function AdminPropostas() {
               required
               placeholder="Ex: Ampliação da Coleta Seletiva"
               value={form.titulo}
-              onChange={e => setForm({...form, titulo: e.target.value})}
+              onChange={(e) => setForm({ ...form, titulo: e.target.value })}
               maxLength="150"
             />
           </div>
@@ -276,47 +342,146 @@ export default function AdminPropostas() {
               rows="3"
               placeholder="Descreva a proposta brevemente..."
               value={form.descricao}
-              onChange={e => setForm({...form, descricao: e.target.value})}
-              style={{ width: '100%', padding: '12px', borderRadius: '12px', border: '1.5px solid var(--border)', fontFamily: 'inherit', resize: 'none' }}
+              onChange={(e) => setForm({ ...form, descricao: e.target.value })}
+              style={{
+                width: '100%',
+                padding: '12px',
+                borderRadius: '12px',
+                border: '1.5px solid var(--border)',
+                fontFamily: 'inherit',
+                resize: 'none',
+              }}
               maxLength="2000"
             />
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className="btn btn-primary btn-full"
-            disabled={submitting || !form.eixoId || !form.titulo || !form.descricao}
+            disabled={
+              submitting || !form.eixoId || !form.titulo || !form.descricao
+            }
           >
             {submitting ? 'Processando...' : 'Salvar Proposta'}
           </button>
         </form>
 
-        <hr style={{ margin: '32px 0', border: '0', borderTop: '1px solid var(--border)' }} />
+        <hr
+          style={{
+            margin: '32px 0',
+            border: '0',
+            borderTop: '1px solid var(--border)',
+          }}
+        />
 
         <div className={styles.listaAtual}>
-          <h3 style={{ fontFamily: '"Fraunces", serif', fontSize: '18px', marginBottom: '16px' }}>
+          <h3
+            style={{
+              fontFamily: '"Fraunces", serif',
+              fontSize: '18px',
+              marginBottom: '16px',
+            }}
+          >
             Lista de Propostas
           </h3>
-          
+
           {loadingEixos ? (
-            <p style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '14px' }}>Atualizando...</p>
+            <p
+              style={{
+                textAlign: 'center',
+                color: 'var(--text-muted)',
+                fontSize: '14px',
+              }}
+            >
+              Atualizando...
+            </p>
           ) : (
-            eixos.map(eixo => (
-              <div key={eixo.id} style={{ marginBottom: '16px', border: '1px solid var(--border)', borderRadius: '12px', overflow: 'hidden', background: '#fff' }}>
-                <div style={{ padding: '10px 16px', background: 'var(--green-pale)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border)' }}>
-                  <span style={{ fontWeight: '500', fontSize: '13px', color: 'var(--green)', textTransform: 'uppercase' }}>{eixo.nome} — {eixo.descricao}</span>
-                  <span style={{ fontSize: '11px', background: 'rgba(0,0,0,0.06)', padding: '2px 8px', borderRadius: '10px' }}>{eixo.propostas?.length || 0} itens</span>
+            eixos.map((eixo) => (
+              <div
+                key={eixo.id}
+                style={{
+                  marginBottom: '16px',
+                  border: '1px solid var(--border)',
+                  borderRadius: '12px',
+                  overflow: 'hidden',
+                  background: '#fff',
+                }}
+              >
+                <div
+                  style={{
+                    padding: '10px 16px',
+                    background: 'var(--green-pale)',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    borderBottom: '1px solid var(--border)',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontWeight: '500',
+                      fontSize: '13px',
+                      color: 'var(--green)',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    {eixo.nome} — {eixo.descricao}
+                  </span>
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      background: 'rgba(0,0,0,0.06)',
+                      padding: '2px 8px',
+                      borderRadius: '10px',
+                    }}
+                  >
+                    {eixo.propostas?.length || 0} itens
+                  </span>
                 </div>
                 <div>
-                  {eixo.propostas?.map(prop => (
-                    <div key={prop.id} style={{ padding: '12px 16px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '12px' }}>
+                  {eixo.propostas?.map((prop) => (
+                    <div
+                      key={prop.id}
+                      style={{
+                        padding: '12px 16px',
+                        borderBottom: '1px solid #f0f0f0',
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        gap: '12px',
+                      }}
+                    >
                       <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: '500', fontSize: '14px', marginBottom: '2px' }}>{prop.titulo}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)', lineHeight: '1.4' }}>{prop.descricao}</div>
+                        <div
+                          style={{
+                            fontWeight: '500',
+                            fontSize: '14px',
+                            marginBottom: '2px',
+                          }}
+                        >
+                          {prop.titulo}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: '12px',
+                            color: 'var(--text-muted)',
+                            lineHeight: '1.4',
+                          }}
+                        >
+                          {prop.descricao}
+                        </div>
                       </div>
-                      <button 
+                      <button
                         onClick={() => handleExcluir(prop.id, prop.titulo)}
-                        style={{ background: 'transparent', color: '#dc2626', border: '1px solid #fecaca', padding: '4px 8px', borderRadius: '6px', cursor: 'pointer', fontSize: '11px' }}
+                        style={{
+                          background: 'transparent',
+                          color: '#dc2626',
+                          border: '1px solid #fecaca',
+                          padding: '4px 8px',
+                          borderRadius: '6px',
+                          cursor: 'pointer',
+                          fontSize: '11px',
+                        }}
                       >
                         Excluir
                       </button>
@@ -331,25 +496,77 @@ export default function AdminPropostas() {
 
       {/* MODAL DE CONFIRMAÇÃO DE EXCLUSÃO */}
       {modalDelete.isOpen && (
-        <div style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.5)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-          <div style={{ background: 'var(--surface)', borderRadius: '24px', padding: '28px 24px', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
-            <div style={{ fontSize: '11px', letterSpacing: '0.09em', color: '#b91c1c', marginBottom: '8px', fontWeight: 'bold' }}>ATENÇÃO</div>
-            <h2 style={{ fontFamily: '"Fraunces", serif', fontSize: '20px', fontWeight: 600, marginBottom: '12px' }}>Excluir Proposta?</h2>
-            <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '24px' }}>
-              Você está prestes a remover: <br/> <strong>"{modalDelete.titulo}"</strong>. <br/> Esta ação não pode ser desfeita.
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 100,
+            background: 'rgba(0,0,0,0.5)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px',
+          }}
+        >
+          <div
+            style={{
+              background: 'var(--surface)',
+              borderRadius: '24px',
+              padding: '28px 24px',
+              width: '100%',
+              maxWidth: '400px',
+              textAlign: 'center',
+            }}
+          >
+            <div
+              style={{
+                fontSize: '11px',
+                letterSpacing: '0.09em',
+                color: '#b91c1c',
+                marginBottom: '8px',
+                fontWeight: 'bold',
+              }}
+            >
+              ATENÇÃO
+            </div>
+            <h2
+              style={{
+                fontFamily: '"Fraunces", serif',
+                fontSize: '20px',
+                fontWeight: 600,
+                marginBottom: '12px',
+              }}
+            >
+              Excluir Proposta?
+            </h2>
+            <p
+              style={{
+                fontSize: '14px',
+                color: 'var(--text-muted)',
+                lineHeight: 1.6,
+                marginBottom: '24px',
+              }}
+            >
+              Você está prestes a remover: <br />{' '}
+              <strong>"{modalDelete.titulo}"</strong>. <br /> Esta ação não pode
+              ser desfeita.
             </p>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-              <button 
-                className="btn btn-primary btn-full" 
-                onClick={confirmarExclusao} 
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+            >
+              <button
+                className="btn btn-primary btn-full"
+                onClick={confirmarExclusao}
                 style={{ background: '#dc2626', color: '#fff', border: 'none' }}
                 disabled={submitting}
               >
                 {submitting ? 'Excluindo...' : 'Sim, excluir proposta'}
               </button>
-              <button 
-                className="btn btn-ghost btn-full" 
-                onClick={() => setModalDelete({ isOpen: false, id: null, titulo: '' })}
+              <button
+                className="btn btn-ghost btn-full"
+                onClick={() =>
+                  setModalDelete({ isOpen: false, id: null, titulo: '' })
+                }
                 disabled={submitting}
               >
                 Cancelar

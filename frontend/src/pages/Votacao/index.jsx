@@ -21,7 +21,7 @@ export default function Votacao() {
   const [votos, setVotos] = useState({});
   const [participante, setParticipante] = useState({ nome: '', email: '' });
   const [emailEditavel, setEmailEditavel] = useState('');
-  
+
   // NOVO: Estado para gerenciar o erro visual dentro do modal
   const [erroModal, setErroModal] = useState('');
 
@@ -104,7 +104,10 @@ export default function Votacao() {
       navigate('/confirmacao', { state: { pdfUrl } });
     } catch (error) {
       // Pega a mensagem do backend ou usa uma genérica
-      setErroModal(error.response?.data?.mensagem || 'Erro ao registrar voto. Tente novamente.');
+      setErroModal(
+        error.response?.data?.mensagem ||
+          'Erro ao registrar voto. Tente novamente.'
+      );
       setSubmitting(false);
       // REMOVIDO: setModalOpen(false) - Mantém o modal aberto para o usuário ver o erro
     }
@@ -131,12 +134,14 @@ export default function Votacao() {
       <div className={styles.dots}>
         {eixos.map((e, i) => {
           const corDoDot = THEMES[e.variant]?.bg || '#000';
-          
+
           return (
             <button
               key={e.id}
               className={getDotClass(i, eixoAtual, styles)}
-              style={{ background: i <= eixoAtual ? corDoDot : 'var(--border)' }}
+              style={{
+                background: i <= eixoAtual ? corDoDot : 'var(--border)',
+              }}
               onClick={() => {
                 if (i <= eixoAtual || votos[eixos[i - 1]?.id]) setEixoAtual(i);
               }}
@@ -249,16 +254,18 @@ export default function Votacao() {
 
             {/* CAIXA DE ERRO RENDERIZADA CONDICIONALMENTE */}
             {erroModal && (
-              <div style={{
-                background: '#fee2e2',
-                color: '#b91c1c',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                marginBottom: '20px',
-                border: '1px solid #fca5a5',
-                lineHeight: '1.4'
-              }}>
+              <div
+                style={{
+                  background: '#fee2e2',
+                  color: '#b91c1c',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  marginBottom: '20px',
+                  border: '1px solid #fca5a5',
+                  lineHeight: '1.4',
+                }}
+              >
                 <strong>Ocorreu um erro: </strong> {erroModal}
               </div>
             )}
@@ -282,7 +289,7 @@ export default function Votacao() {
                   border: `1.5px solid ${erroModal ? '#fca5a5' : 'var(--border)'}`, // Borda vermelha se der erro
                   borderRadius: '12px',
                   fontSize: '15px',
-                  outline: 'none'
+                  outline: 'none',
                 }}
               />
             </div>
