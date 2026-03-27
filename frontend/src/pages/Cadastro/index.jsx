@@ -167,7 +167,7 @@ export default function Cadastro() {
           disabled={!isFormularioValido(form) || enviando}
           onClick={handleSubmit}
         >
-          {enviando ? 'Enviando...' : 'Continuar para votação →'}
+          {enviando ? 'Cadastrando...' : 'Continuar para votação →'}
         </button>
       </div>
       {modalEmailExiste && (

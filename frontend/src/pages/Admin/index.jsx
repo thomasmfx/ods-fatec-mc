@@ -26,6 +26,7 @@ export default function AdminPropostas() {
     titulo: '',
     descricao: '',
     autor: '',
+    autorEmail: '',
   });
 
   // Estado da Modal de Exclusão
@@ -85,7 +86,7 @@ export default function AdminPropostas() {
     sessionStorage.removeItem('adminSecret');
     setSecret('');
     setIsAuthenticated(false);
-    setForm({ eixoId: '', titulo: '', descricao: '', autor: '' });
+    setForm({ eixoId: '', titulo: '', descricao: '', autor: '', autorEmail: '' });
     setMensagem({ texto: '', tipo: '' });
     setAuthErro('');
   }
@@ -110,6 +111,7 @@ export default function AdminPropostas() {
           titulo: form.titulo,
           descricao: form.descricao,
           autor: form.autor || null,
+          autorEmail: form.autorEmail || null,
         },
         {
           headers: { 'X-Admin-Secret': adminSecret },
@@ -120,7 +122,7 @@ export default function AdminPropostas() {
         texto: 'Proposta cadastrada com sucesso!',
         tipo: 'sucesso',
       });
-      setForm({ eixoId: '', titulo: '', descricao: '', autor: '' });
+      setForm({ eixoId: '', titulo: '', descricao: '', autor: '', autorEmail: '' });
       await carregarDados();
     } catch (err) {
       if (err.response?.status === 401) {
@@ -399,7 +401,7 @@ export default function AdminPropostas() {
             />
           </div>
 
-          <div className="field" style={{ marginBottom: '20px' }}>
+          <div className="field" style={{ marginBottom: '16px' }}>
             <label className="field-label">Autor (opcional)</label>
             <input
               type="text"
@@ -407,6 +409,17 @@ export default function AdminPropostas() {
               value={form.autor}
               onChange={(e) => setForm({ ...form, autor: e.target.value })}
               maxLength="200"
+            />
+          </div>
+
+          <div className="field" style={{ marginBottom: '20px' }}>
+            <label className="field-label">E-mail do Autor (opcional)</label>
+            <input
+              type="email"
+              placeholder="Ex: joao@email.com"
+              value={form.autorEmail}
+              onChange={(e) => setForm({ ...form, autorEmail: e.target.value })}
+              maxLength="300"
             />
           </div>
 
@@ -516,6 +529,15 @@ export default function AdminPropostas() {
                         >
                           {prop.titulo}
                         </div>
+                        <div
+                          style={{
+                            fontSize: '12px',
+                            color: 'var(--text-muted)',
+                            lineHeight: '1.4',
+                          }}
+                          >
+                          {prop.descricao}
+                        </div>
                         {prop.autor && (
                           <div
                             style={{
@@ -528,15 +550,6 @@ export default function AdminPropostas() {
                             Autor: {prop.autor}
                           </div>
                         )}
-                        <div
-                          style={{
-                            fontSize: '12px',
-                            color: 'var(--text-muted)',
-                            lineHeight: '1.4',
-                          }}
-                        >
-                          {prop.descricao}
-                        </div>
                       </div>
                       <button
                         onClick={() => handleExcluir(prop.id, prop.titulo)}

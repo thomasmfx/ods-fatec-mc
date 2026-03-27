@@ -7,5 +7,6 @@ public record PropostaRequestDTO(
     @NotNull Integer eixoId,
     @NotBlank String titulo,
     @NotBlank String descricao,
-    String autor
+    String autor,
+    String autorEmail
 ) {}

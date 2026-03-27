@@ -177,10 +177,10 @@ export default function Votacao() {
               </div>
               <div>
                 <h3>{proposta.titulo}</h3>
+                <p>{proposta.descricao}</p>
                 {proposta.autor && (
                   <span className={styles.autor}>Autor: {proposta.autor}</span>
                 )}
-                <p>{proposta.descricao}</p>
               </div>
             </div>
           );

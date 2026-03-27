@@ -14,11 +14,11 @@ public class PropostaRepository {
 
     public void inserir(PropostaRequestDTO req) {
         String sql = """
-            INSERT INTO PROPOSTAS (prp_titulo, prp_descricao, prp_autor, prp_eos_id)
-            VALUES (?, ?, ?, ?)
+            INSERT INTO PROPOSTAS (prp_titulo, prp_descricao, prp_autor, prp_autor_email, prp_eos_id)
+            VALUES (?, ?, ?, ?, ?)
             """;
 
-        jdbc.update(sql, req.titulo(), req.descricao(), req.autor(), req.eixoId());
+        jdbc.update(sql, req.titulo(), req.descricao(), req.autor(), req.autorEmail(), req.eixoId());
     }
 
     public void deletar(Integer id) {
