@@ -65,6 +65,23 @@ export default function EventoInativo() {
         >
           Ver Resultados ao Vivo
         </button>
+
+        <button
+          className="btn btn-full"
+          onClick={() => navigate('/admin')}
+          style={{
+            padding: '16px',
+            fontSize: '16px',
+            fontWeight: 500,
+            marginTop: '12px',
+            background: 'transparent',
+            border: '1px solid var(--text-muted)',
+            color: 'var(--text-muted)',
+            cursor: 'pointer',
+          }}
+        >
+          Página de Gestão
+        </button>
       </div>
     </div>
   );
