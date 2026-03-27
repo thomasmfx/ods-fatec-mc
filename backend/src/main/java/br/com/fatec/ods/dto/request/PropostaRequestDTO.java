@@ -6,5 +6,6 @@ import jakarta.validation.constraints.NotNull;
 public record PropostaRequestDTO(
     @NotNull Integer eixoId,
     @NotBlank String titulo,
-    @NotBlank String descricao
+    @NotBlank String descricao,
+    String autor
 ) {}

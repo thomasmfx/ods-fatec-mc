@@ -23,7 +23,7 @@ public class EixoService {
     public EixosResponseDTO listarEixosComPropostas() {
         String sql = """
             SELECT e.eos_id, e.eos_nome, e.eos_descricao,
-                   p.prp_id, p.prp_titulo, p.prp_descricao
+                   p.prp_id, p.prp_titulo, p.prp_descricao, p.prp_autor
             FROM EIXOS_ODS e
             LEFT JOIN PROPOSTAS p ON e.eos_id = p.prp_eos_id
             ORDER BY e.eos_id, p.prp_id
@@ -47,7 +47,8 @@ public class EixoService {
                     PropostaDTO proposta = new PropostaDTO(
                             propostaId,
                             rs.getString("prp_titulo"),
-                            rs.getString("prp_descricao")
+                            rs.getString("prp_descricao"),
+                            rs.getString("prp_autor")
                     );
                     mapEixos.get(eixoId).propostas().add(proposta);
                 }
