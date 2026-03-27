@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Hero from '../../components/Hero';
+import Loading from '../../components/Loading';
 import api from '../../services/api';
 import styles from './cadastro.module.css';
 import { isFormularioValido, eixos } from './cadastroUtils.js';
@@ -96,7 +97,9 @@ export default function Cadastro() {
     formSanitized.telefone = form.telefone.replaceAll(/\D/g, '');
 
     try {
-      await api.post('/sessao/cadastro', formSanitized);
+      const { data } = await api.post('/sessao/cadastro', formSanitized);
+      sessionStorage.setItem('sessaoToken', data.sessaoToken);
+      sessionStorage.setItem('participante', JSON.stringify(data.participante));
       navigate('/votacao');
     } catch (e) {
       if (e.response?.status === 409) {
@@ -110,12 +113,7 @@ export default function Cadastro() {
     }
   }
 
-  if (loading)
-    return (
-      <div className="scroll">
-        <p className={styles.loadingText}>Carregando formulário...</p>
-      </div>
-    );
+  if (loading) return <Loading texto="Carregando formulário..." />;
 
   return (
     <div className={`screen active ${styles.screen}`} id="screen-cadastro">
@@ -169,44 +167,80 @@ export default function Cadastro() {
           disabled={!isFormularioValido(form) || enviando}
           onClick={handleSubmit}
         >
-          {enviando ? 'Enviando...' : 'Continuar para votação →'}
+          {enviando ? 'Cadastrando...' : 'Continuar para votação →'}
         </button>
       </div>
       {modalEmailExiste && (
-        <div style={{ display: 'flex', position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,0.5)', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
-            <div style={{ background: 'var(--surface)', borderRadius: '24px', padding: '32px 24px', width: '100%', maxWidth: '400px', textAlign: 'center' }}>
-                
-                <div style={{ fontSize: '40px', marginBottom: '16px' }}>👋</div>
-                
-                <h2 style={{ fontFamily: '"Fraunces", serif', fontSize: '20px', fontWeight: 600, marginBottom: '8px', color: 'var(--text)' }}>
-                    E-mail já cadastrado
-                </h2>
-                
-                <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.6, marginBottom: '24px' }}>
-                    Este e-mail já está registrado no nosso sistema. Vá para a aba de Check-in para continuar sua sessão.
-                </p>
+        <div
+          style={{
+            display: 'flex',
+            position: 'fixed',
+            inset: 0,
+            zIndex: 100,
+            background: 'rgba(0,0,0,0.5)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px',
+          }}
+        >
+          <div
+            style={{
+              background: 'var(--surface)',
+              borderRadius: '24px',
+              padding: '32px 24px',
+              width: '100%',
+              maxWidth: '400px',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ fontSize: '40px', marginBottom: '16px' }}>👋</div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    <button 
-                        className="btn btn-primary btn-full" 
-                        onClick={() => {
-                            setModalEmailExiste(false);
-                            navigate('/');
-                        }}
-                    >
-                        Fazer Check-in
-                    </button>
-                    <button 
-                        className="btn btn-ghost btn-full" 
-                        onClick={() => setModalEmailExiste(false)}
-                    >
-                        Voltar
-                    </button>
-                </div>
+            <h2
+              style={{
+                fontFamily: '"Fraunces", serif',
+                fontSize: '20px',
+                fontWeight: 600,
+                marginBottom: '8px',
+                color: 'var(--text)',
+              }}
+            >
+              E-mail já cadastrado
+            </h2>
 
+            <p
+              style={{
+                fontSize: '14px',
+                color: 'var(--text-muted)',
+                lineHeight: 1.6,
+                marginBottom: '24px',
+              }}
+            >
+              Este e-mail já está registrado no nosso sistema. Vá para a aba de
+              Check-in para continuar sua sessão.
+            </p>
+
+            <div
+              style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
+            >
+              <button
+                className="btn btn-primary btn-full"
+                onClick={() => {
+                  setModalEmailExiste(false);
+                  navigate('/');
+                }}
+              >
+                Fazer Check-in
+              </button>
+              <button
+                className="btn btn-ghost btn-full"
+                onClick={() => setModalEmailExiste(false)}
+              >
+                Voltar
+              </button>
             </div>
+          </div>
         </div>
-    )}
+      )}
     </div>
   );
 }

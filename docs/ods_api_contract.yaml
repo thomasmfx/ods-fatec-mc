@@ -22,6 +22,8 @@ tags:
     description: Eixos e propostas disponíveis para votação
   - name: Dashboard
     description: Resultados em tempo real
+  - name: Admin
+    description: Rotas protegidas para a coordenação do evento
 
 # ─────────────────────────────────────────────
 # PATHS
@@ -487,6 +489,68 @@ paths:
                         titulo: Conselhos municipais fortalecidos
                         votos: 2
 
+  # ── ADMIN ───────────────────────────────────
+
+  /propostas:
+    post:
+      tags: [Admin]
+      summary: Cadastra uma nova proposta em um eixo existente
+      description: >
+        Rota protegida por um secret via header. Permite que a coordenação
+        insira propostas de última hora diretamente no banco.
+      parameters:
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema:
+            type: string
+          description: Senha de administração configurada nas variáveis de ambiente.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PropostaInput'
+            example:
+              eixoId: 1
+              titulo: "Nova Proposta de Urgência"
+              descricao: "Descrição detalhada inserida no dia do evento..."
+      responses:
+        '201':
+          description: Proposta criada com sucesso
+        '401':
+          description: Secret ausente ou inválido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Erro'
+              example:
+                erro: nao_autorizado
+                mensagem: Não autorizado. Credencial de admin inválida.
+        '422':
+          $ref: '#/components/responses/ValidacaoError'
+          
+  /propostas/{id}:
+    delete:
+      tags: [Admin]
+      summary: Remove uma proposta (apenas se não houver votos)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: header
+          name: X-Admin-Secret
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Removido com sucesso
+        '400':
+          description: Proposta já possui votos e não pode ser removida
+
 # ─────────────────────────────────────────────
 # COMPONENTS
 # ─────────────────────────────────────────────
@@ -786,3 +850,20 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/OpcaoSimples'
+
+    PropostaInput:
+        type: object
+        required:
+          - eixoId
+          - titulo
+          - descricao
+        properties:
+          eixoId:
+            type: integer
+            example: 1
+          titulo:
+            type: string
+            example: "Nova Proposta de Urgência"
+          descricao:
+            type: string
+            example: "Descrição detalhada da proposta inserida pelo admin."

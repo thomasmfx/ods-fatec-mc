@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../../services/api';
 import styles from './votacao.module.css';
 import Hero from '../../components/Hero';
+import Loading from '../../components/Loading';
 import { THEMES } from '../../components/Hero/variants';
 
 function getDotClass(i, eixoAtual, styles) {
@@ -21,7 +22,7 @@ export default function Votacao() {
   const [votos, setVotos] = useState({});
   const [participante, setParticipante] = useState({ nome: '', email: '' });
   const [emailEditavel, setEmailEditavel] = useState('');
-  
+
   // NOVO: Estado para gerenciar o erro visual dentro do modal
   const [erroModal, setErroModal] = useState('');
 
@@ -44,7 +45,7 @@ export default function Votacao() {
       .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="screen">Carregando propostas...</div>;
+  if (loading) return <Loading texto="Carregando propostas..." />;
   if (eixos.length === 0)
     return <div className="screen">Nenhum eixo encontrado.</div>;
 
@@ -104,7 +105,10 @@ export default function Votacao() {
       navigate('/confirmacao', { state: { pdfUrl } });
     } catch (error) {
       // Pega a mensagem do backend ou usa uma genérica
-      setErroModal(error.response?.data?.mensagem || 'Erro ao registrar voto. Tente novamente.');
+      setErroModal(
+        error.response?.data?.mensagem ||
+          'Erro ao registrar voto. Tente novamente.'
+      );
       setSubmitting(false);
       // REMOVIDO: setModalOpen(false) - Mantém o modal aberto para o usuário ver o erro
     }
@@ -114,7 +118,12 @@ export default function Votacao() {
     <div className={`screen active ${styles.screen}`} id="screen-votacao">
       <div className={styles.header}>
         <div className={styles.headerBrand}>
-          ODS <em>Mogi</em>
+          <button className={styles.headerBtn} onClick={() => {
+            navigate('/');
+            sessionStorage.clear();
+          }}>
+            ODS <em>Mogi</em>
+          </button>
         </div>
         <div className={styles.headerParticipant}>
           {participante.nome || 'Participante'}
@@ -131,12 +140,14 @@ export default function Votacao() {
       <div className={styles.dots}>
         {eixos.map((e, i) => {
           const corDoDot = THEMES[e.variant]?.bg || '#000';
-          
+
           return (
             <button
               key={e.id}
               className={getDotClass(i, eixoAtual, styles)}
-              style={{ background: i <= eixoAtual ? corDoDot : 'var(--border)' }}
+              style={{
+                background: i <= eixoAtual ? corDoDot : 'var(--border)',
+              }}
               onClick={() => {
                 if (i <= eixoAtual || votos[eixos[i - 1]?.id]) setEixoAtual(i);
               }}
@@ -167,10 +178,35 @@ export default function Votacao() {
               <div>
                 <h3>{proposta.titulo}</h3>
                 <p>{proposta.descricao}</p>
+                {proposta.autor && (
+                  <span className={styles.autor}>Autor: {proposta.autor}</span>
+                )}
               </div>
             </div>
           );
         })}
+
+        <div className={styles.delegacao}>
+          <div className={styles.delegacaoTitle}>DELEGAÇÃO</div>
+          <div className={styles.delegacaoList}>
+            <div className={styles.delegacaoItem}>
+              <span className={styles.delegacaoRole}>Delegada</span>
+              <span className={styles.delegacaoName}>Cristiane Brandão dos Santos</span>
+            </div>
+            <div className={styles.delegacaoItem}>
+              <span className={styles.delegacaoRole}>1º Suplente</span>
+              <span className={styles.delegacaoName}>Roberto de Andrade Bordin</span>
+            </div>
+            <div className={styles.delegacaoItem}>
+              <span className={styles.delegacaoRole}>2ª Suplente</span>
+              <span className={styles.delegacaoName}>Mariangela Ferreira Fuentes Molina</span>
+            </div>
+            <div className={styles.delegacaoItem}>
+              <span className={styles.delegacaoRole}>3ª Suplente</span>
+              <span className={styles.delegacaoName}>Areta Lúcia da Silva</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className={styles.footer}>
@@ -249,16 +285,18 @@ export default function Votacao() {
 
             {/* CAIXA DE ERRO RENDERIZADA CONDICIONALMENTE */}
             {erroModal && (
-              <div style={{
-                background: '#fee2e2',
-                color: '#b91c1c',
-                padding: '12px 16px',
-                borderRadius: '8px',
-                fontSize: '14px',
-                marginBottom: '20px',
-                border: '1px solid #fca5a5',
-                lineHeight: '1.4'
-              }}>
+              <div
+                style={{
+                  background: '#fee2e2',
+                  color: '#b91c1c',
+                  padding: '12px 16px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  marginBottom: '20px',
+                  border: '1px solid #fca5a5',
+                  lineHeight: '1.4',
+                }}
+              >
                 <strong>Ocorreu um erro: </strong> {erroModal}
               </div>
             )}
@@ -282,7 +320,7 @@ export default function Votacao() {
                   border: `1.5px solid ${erroModal ? '#fca5a5' : 'var(--border)'}`, // Borda vermelha se der erro
                   borderRadius: '12px',
                   fontSize: '15px',
-                  outline: 'none'
+                  outline: 'none',
                 }}
               />
             </div>

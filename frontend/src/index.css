@@ -6,6 +6,11 @@
   padding: 0;
 }
 
+input::-ms-reveal,
+input::-webkit-credentials-auto-fill-button {
+  display: none;
+}
+
 :root {
   --green: #2d6a4f;
   --green-mid: #40916c;

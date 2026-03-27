@@ -109,6 +109,8 @@ CREATE TABLE PROPOSTAS (
     prp_id INT NOT NULL AUTO_INCREMENT,
     prp_titulo VARCHAR(150) NOT NULL,
     prp_descricao VARCHAR(2000) NOT NULL,
+    prp_autor VARCHAR(200),
+    prp_autor_email VARCHAR(300),
     prp_eos_id INT NOT NULL,
     CONSTRAINT PK_PRP PRIMARY KEY (prp_id),
     CONSTRAINT FK_PRP_EOS FOREIGN KEY (prp_eos_id) REFERENCES EIXOS_ODS (eos_id)
