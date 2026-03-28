@@ -47,14 +47,18 @@
 
 @keyframes pulse {
   0%,
-  100% { opacity: 1; }
-  50% { opacity: 0.3; }
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
 }
 
 .scroll {
   flex: 1;
   /* Mantém o auto caso a tela seja absurdamente pequena, mas na prática não vai scrollar */
-  overflow-y: auto; 
+  overflow-y: auto;
   padding: 24px 48px; /* Reduzido para caber melhor */
   display: flex;
   flex-direction: column;
@@ -206,7 +210,7 @@
   }
 
   .stats {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
     gap: 12px;
     margin-bottom: 24px;
   }
@@ -228,7 +232,7 @@
   }
 
   .grid {
-    grid-template-columns: 1fr; 
+    grid-template-columns: 1fr;
     gap: 20px;
   }
 
@@ -237,7 +241,7 @@
   }
 
   .barLabel {
-    flex-direction: column; 
+    flex-direction: column;
     align-items: flex-start;
     gap: 2px;
   }

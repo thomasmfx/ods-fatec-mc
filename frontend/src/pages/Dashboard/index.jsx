@@ -27,23 +27,30 @@ export default function Dashboard() {
 
           const eixosFormatados = eixos.map((eixo, i) => {
             const theme = THEMES[i % THEMES.length];
-            const totalEixo = eixo.propostas.reduce((acc, p) => acc + p.votos, 0);
+            const totalEixo = eixo.propostas.reduce(
+              (acc, p) => acc + p.votos,
+              0
+            );
 
-            const sortedPropostas = [...eixo.propostas].sort((a, b) => b.votos - a.votos);
-            
+            const sortedPropostas = [...eixo.propostas].sort(
+              (a, b) => b.votos - a.votos
+            );
+
             let propostasParaExibir = [];
 
             if (sortedPropostas.length > 3) {
               const top3 = sortedPropostas.slice(0, 3);
-              const votosRestantes = sortedPropostas.slice(3).reduce((acc, p) => acc + p.votos, 0);
-              
+              const votosRestantes = sortedPropostas
+                .slice(3)
+                .reduce((acc, p) => acc + p.votos, 0);
+
               propostasParaExibir = [
                 ...top3,
                 {
                   titulo: 'Outras propostas',
                   votos: votosRestantes,
-                  isOutros: true
-                }
+                  isOutros: true,
+                },
               ];
             } else {
               propostasParaExibir = sortedPropostas;
@@ -55,7 +62,8 @@ export default function Dashboard() {
               barCor: theme.barCor,
               propostas: propostasParaExibir.map((p) => ({
                 ...p,
-                pct: totalEixo > 0 ? ((p.votos / totalEixo) * 100).toFixed(1) : 0,
+                pct:
+                  totalEixo > 0 ? ((p.votos / totalEixo) * 100).toFixed(1) : 0,
               })),
             };
           });
@@ -88,15 +96,20 @@ export default function Dashboard() {
   }, []);
 
   if (loading || !dados) {
-    return <Loading texto="Carregando resultados ao vivo..." className={styles.screen} />;
+    return (
+      <Loading
+        texto="Carregando resultados ao vivo..."
+        className={styles.screen}
+      />
+    );
   }
 
   return (
     <div className={`screen active ${styles.screen}`} id="screen-dashboard">
       <div className={styles.top}>
-        <div 
-          className={styles.brand} 
-          onClick={() => navigate('/')} 
+        <div
+          className={styles.brand}
+          onClick={() => navigate('/')}
           style={{ cursor: 'pointer' }}
           title="Voltar para a Home"
         >
@@ -123,7 +136,15 @@ export default function Dashboard() {
 
         <div className={styles.grid}>
           {dados.eixos.length === 0 ? (
-            <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: 'rgba(255,255,255,0.4)', padding: '40px 0', fontStyle: 'italic' }}>
+            <div
+              style={{
+                gridColumn: '1 / -1',
+                textAlign: 'center',
+                color: 'rgba(255,255,255,0.4)',
+                padding: '40px 0',
+                fontStyle: 'italic',
+              }}
+            >
               Nenhum eixo temático configurado para o evento.
             </div>
           ) : (
@@ -132,25 +153,31 @@ export default function Dashboard() {
                 <div className={styles.eixoTitle} style={{ color: eixo.cor }}>
                   {eixo.nome}
                 </div>
-                
+
                 <div className={styles.propostasList}>
                   {/* Validação de Empty State para as propostas do eixo */}
                   {eixo.propostas.length > 0 ? (
                     eixo.propostas.map((proposta) => (
                       <div key={proposta.titulo} className={styles.barItem}>
                         <div className={styles.barLabel}>
-                          <span 
+                          <span
                             className={styles.barLabelText}
-                            style={{ 
-                              color: proposta.isOutros ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.9)',
-                              fontStyle: proposta.isOutros ? 'italic' : 'normal'
+                            style={{
+                              color: proposta.isOutros
+                                ? 'rgba(255,255,255,0.5)'
+                                : 'rgba(255,255,255,0.9)',
+                              fontStyle: proposta.isOutros
+                                ? 'italic'
+                                : 'normal',
                             }}
                           >
                             {proposta.titulo}
                           </span>
                           <span className={styles.barLabelNum}>
                             {`${proposta.votos} ${proposta.votos === 1 ? 'voto' : 'votos'}`}{' '}
-                            <span className={styles.pctText}>({proposta.pct}%)</span>
+                            <span className={styles.pctText}>
+                              ({proposta.pct}%)
+                            </span>
                           </span>
                         </div>
                         <div className={styles.barTrack}>
@@ -158,14 +185,23 @@ export default function Dashboard() {
                             className={styles.barFill}
                             style={{
                               width: `${barWidths[`${eixo.id}-${proposta.titulo}`] ?? 0}%`,
-                              background: proposta.isOutros ? 'rgba(255, 255, 255, 0.15)' : eixo.barCor,
+                              background: proposta.isOutros
+                                ? 'rgba(255, 255, 255, 0.15)'
+                                : eixo.barCor,
                             }}
                           />
                         </div>
                       </div>
                     ))
                   ) : (
-                    <div style={{ color: 'rgba(255, 255, 255, 0.3)', fontStyle: 'italic', fontSize: '15px', padding: '16px 0' }}>
+                    <div
+                      style={{
+                        color: 'rgba(255, 255, 255, 0.3)',
+                        fontStyle: 'italic',
+                        fontSize: '15px',
+                        padding: '16px 0',
+                      }}
+                    >
                       Nenhuma proposta registrada neste eixo.
                     </div>
                   )}
