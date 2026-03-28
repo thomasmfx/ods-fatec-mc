@@ -128,7 +128,7 @@
 }
 
 .card :global(p) {
-  max-width: 100CH;
+  max-width: 100ch;
   font-size: 13px;
   color: var(--text-muted);
   line-height: 1.5;

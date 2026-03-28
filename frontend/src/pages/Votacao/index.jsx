@@ -118,10 +118,13 @@ export default function Votacao() {
     <div className={`screen active ${styles.screen}`} id="screen-votacao">
       <div className={styles.header}>
         <div className={styles.headerBrand}>
-          <button className={styles.headerBtn} onClick={() => {
-            navigate('/');
-            sessionStorage.clear();
-          }}>
+          <button
+            className={styles.headerBtn}
+            onClick={() => {
+              navigate('/');
+              sessionStorage.clear();
+            }}
+          >
             ODS <em>Mogi</em>
           </button>
         </div>
@@ -191,15 +194,21 @@ export default function Votacao() {
           <div className={styles.delegacaoList}>
             <div className={styles.delegacaoItem}>
               <span className={styles.delegacaoRole}>Delegada</span>
-              <span className={styles.delegacaoName}>Cristiane Brandão dos Santos</span>
+              <span className={styles.delegacaoName}>
+                Cristiane Brandão dos Santos
+              </span>
             </div>
             <div className={styles.delegacaoItem}>
               <span className={styles.delegacaoRole}>1º Suplente</span>
-              <span className={styles.delegacaoName}>Roberto de Andrade Bordin</span>
+              <span className={styles.delegacaoName}>
+                Roberto de Andrade Bordin
+              </span>
             </div>
             <div className={styles.delegacaoItem}>
               <span className={styles.delegacaoRole}>2ª Suplente</span>
-              <span className={styles.delegacaoName}>Mariangela Ferreira Fuentes Molina</span>
+              <span className={styles.delegacaoName}>
+                Mariangela Ferreira Fuentes Molina
+              </span>
             </div>
             <div className={styles.delegacaoItem}>
               <span className={styles.delegacaoRole}>3ª Suplente</span>
