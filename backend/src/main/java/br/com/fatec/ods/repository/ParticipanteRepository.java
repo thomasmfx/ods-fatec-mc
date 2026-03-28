@@ -106,7 +106,7 @@ public class ParticipanteRepository {
     public void inserirCadeias(int parId, List<Integer> cadeiaIds) {
       for (Integer cadeiaId : cadeiaIds) {
         jdbc.update(
-            "INSERT INTO PARTICIPANTES_CADEIAS_PRODUTIVAS (pcp_cdp_id, pcp_par_id) VALUES (?, ?)",
+            "INSERT INTO PARTICIPANTES_CADS_PRODUTIVAS (pcp_cdp_id, pcp_par_id) VALUES (?, ?)",
             cadeiaId, parId
         );
       }
