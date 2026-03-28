@@ -120,6 +120,7 @@
 }
 
 .card :global(h3) {
+  max-width: 60ch;
   font-family: 'Fraunces', serif;
   font-size: 15px;
   font-weight: 600;
@@ -127,6 +128,7 @@
 }
 
 .card :global(p) {
+  max-width: 100CH;
   font-size: 13px;
   color: var(--text-muted);
   line-height: 1.5;

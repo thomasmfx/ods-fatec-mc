@@ -80,9 +80,9 @@ Para criar as tabelas, execute o script de inicialização:
 mysql -u ods_user -p ods < db/init.sql
 ```
 
-Para popular as tabelas, execute o script de seed:
+Para popular as tabelas com os dados base, execute o script de seed:
 ```bash
-mysql -u ods_user -p ods < db/seed.sql
+mysql -u ods_user -p ods < db/seed_prod.sql
 ```
 
 ---

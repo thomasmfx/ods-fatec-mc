@@ -1,19 +1,24 @@
 .screen {
   background: #0a0a08;
   color: #f0f0ea;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden; /* Trava o scroll da página inteira */
 }
 
 .top {
-  padding: 24px 48px;
+  padding: 16px 48px; /* Reduzido o padding vertical */
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
 }
 
 .brand {
   font-family: 'Fraunces', serif;
-  font-size: 26px;
+  font-size: 24px;
   color: #f0f0ea;
 }
 
@@ -26,15 +31,15 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 16px;
+  font-size: 15px;
   color: #9fe1cb;
   font-weight: 500;
 }
 
 .liveDot::before {
   content: '';
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: #9fe1cb;
   animation: pulse 2s infinite;
@@ -42,113 +47,137 @@
 
 @keyframes pulse {
   0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.3;
-  }
+  100% { opacity: 1; }
+  50% { opacity: 0.3; }
 }
 
 .scroll {
   flex: 1;
-  overflow-y: auto;
-  padding: 36px 48px 48px;
+  /* Mantém o auto caso a tela seja absurdamente pequena, mas na prática não vai scrollar */
+  overflow-y: auto; 
+  padding: 24px 48px; /* Reduzido para caber melhor */
+  display: flex;
+  flex-direction: column;
 }
 
 .stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-bottom: 40px;
+  margin-bottom: 24px; /* Reduzido de 40px */
+  flex-shrink: 0;
 }
 
 .statCard {
   background: rgba(255, 255, 255, 0.07);
-  border-radius: 20px;
-  padding: 28px 20px;
+  border-radius: 16px;
+  padding: 16px 20px; /* Reduzido de 28px */
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .statNum {
   font-family: 'Fraunces', serif;
-  font-size: 56px;
+  font-size: 42px; /* Reduzido de 56px para economizar altura */
   font-weight: 600;
   line-height: 1;
   color: #9fe1cb;
 }
 
 .statLabel {
-  font-size: 15px;
+  font-size: 13px;
   color: rgba(255, 255, 255, 0.5);
-  margin-top: 8px;
+  margin-top: 6px;
   letter-spacing: 0.08em;
 }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 32px;
+  gap: 20px 32px; /* Gap vertical reduzido de 40px para 20px */
+  flex: 1; /* Permite que o grid ocupe o espaço restante */
+}
+
+.eixoContainer {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 16px 24px; /* Reduzido de 24px */
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centraliza o conteúdo dentro do card */
 }
 
 .eixoLabel {
-  font-size: 13px;
+  font-size: 12px;
   letter-spacing: 0.1em;
   color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .eixoTitle {
   font-family: 'Fraunces', serif;
-  font-size: 22px;
-  margin-bottom: 20px;
+  font-size: 20px; /* Levemente reduzido */
+  margin-bottom: 16px; /* Reduzido de 24px */
   line-height: 1.2;
 }
 
 .barItem {
-  margin-bottom: 20px;
+  margin-bottom: 12px; /* Reduzido de 20px */
+}
+
+.barItem:last-child {
+  margin-bottom: 0;
 }
 
 .barLabel {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 8px;
+  align-items: flex-end;
+  margin-bottom: 6px;
+  gap: 16px;
 }
 
 .barLabelText {
-  font-size: 17px;
+  font-size: 15px; /* Ajuste fino de legibilidade */
   color: rgba(255, 255, 255, 0.9);
   font-weight: 400;
-  line-height: 1.3;
+  line-height: 1.2;
+  flex: 1;
 }
 
 .barLabelNum {
   font-family: 'Fraunces', serif;
-  font-size: 26px;
+  font-size: 18px; /* Reduzido de 22px */
   color: #fff;
   font-weight: 600;
-  margin-left: 16px;
   flex-shrink: 0;
+  text-align: right;
+}
+
+.pctText {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: 400;
 }
 
 .barTrack {
-  height: 14px;
+  height: 8px; /* Barras mais finas (era 12px) */
   background: rgba(255, 255, 255, 0.08);
-  border-radius: 7px;
+  border-radius: 4px;
   overflow: hidden;
 }
 
 .barFill {
   height: 100%;
-  border-radius: 7px;
+  border-radius: 4px;
   transition: width 1.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .backLink {
   text-align: center;
-  margin-top: 36px;
+  margin-top: 16px; /* Reduzido de 48px */
+  flex-shrink: 0;
 }
 
 .backLink button {
@@ -157,4 +186,64 @@
   font-size: 14px;
   color: rgba(255, 255, 255, 0.3);
   cursor: pointer;
+  transition: color 0.2s;
+}
+
+.backLink button:hover {
+  color: #fff;
+}
+
+/* ========================================================= */
+/* RESPONSIVIDADE (MOBILE) - Mantida intacta para o celular  */
+/* ========================================================= */
+@media (max-width: 768px) {
+  .top {
+    padding: 16px 20px;
+  }
+
+  .scroll {
+    padding: 20px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr; 
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .statCard {
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .statNum {
+    font-size: 32px;
+  }
+
+  .statLabel {
+    margin-top: 0;
+    text-align: right;
+  }
+
+  .grid {
+    grid-template-columns: 1fr; 
+    gap: 20px;
+  }
+
+  .eixoContainer {
+    padding: 16px;
+  }
+
+  .barLabel {
+    flex-direction: column; 
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .barLabelNum {
+    font-size: 16px;
+    text-align: left;
+  }
 }
