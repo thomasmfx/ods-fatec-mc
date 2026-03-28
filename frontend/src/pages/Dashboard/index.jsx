@@ -19,47 +19,72 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api
-      .get('/dashboard')
-      .then((res) => {
-        const { totalParticipantes, totalVotos, eixos } = res.data;
+    const carregarDados = () => {
+      api
+        .get('/dashboard')
+        .then((res) => {
+          const { totalParticipantes, totalVotos, eixos } = res.data;
 
-        // Prepara os dados adicionando as cores e calculando a porcentagem (%)
-        const eixosFormatados = eixos.map((eixo, i) => {
-          const theme = THEMES[i % THEMES.length];
-          // Descobre quantos votos o eixo teve no total para fazer a regra de 3
-          const totalEixo = eixo.propostas.reduce((acc, p) => acc + p.votos, 0);
+          const eixosFormatados = eixos.map((eixo, i) => {
+            const theme = THEMES[i % THEMES.length];
+            const totalEixo = eixo.propostas.reduce((acc, p) => acc + p.votos, 0);
 
-          return {
-            ...eixo,
-            cor: theme.cor,
-            barCor: theme.barCor,
-            propostas: eixo.propostas.map((p) => ({
-              ...p,
-              pct: totalEixo > 0 ? ((p.votos / totalEixo) * 100).toFixed(1) : 0,
-            })),
-          };
-        });
+            const sortedPropostas = [...eixo.propostas].sort((a, b) => b.votos - a.votos);
+            
+            let propostasParaExibir = [];
 
-        setDados({
-          totalParticipantes,
-          totalVotos,
-          eixos: eixosFormatados,
-        });
+            if (sortedPropostas.length > 3) {
+              const top3 = sortedPropostas.slice(0, 3);
+              const votosRestantes = sortedPropostas.slice(3).reduce((acc, p) => acc + p.votos, 0);
+              
+              propostasParaExibir = [
+                ...top3,
+                {
+                  titulo: 'Outras propostas',
+                  votos: votosRestantes,
+                  isOutros: true
+                }
+              ];
+            } else {
+              propostasParaExibir = sortedPropostas;
+            }
 
-        // Dispara a animação das barras após os dados carregarem
-        setTimeout(() => {
-          const widths = {};
-          eixosFormatados.forEach((e) => {
-            e.propostas.forEach((p) => {
-              widths[`${e.id}-${p.titulo}`] = p.pct;
-            });
+            return {
+              ...eixo,
+              cor: theme.cor,
+              barCor: theme.barCor,
+              propostas: propostasParaExibir.map((p) => ({
+                ...p,
+                pct: totalEixo > 0 ? ((p.votos / totalEixo) * 100).toFixed(1) : 0,
+              })),
+            };
           });
-          setBarWidths(widths);
-        }, 200);
-      })
-      .catch((err) => console.error('Erro ao carregar dashboard:', err))
-      .finally(() => setLoading(false));
+
+          setDados({
+            totalParticipantes,
+            totalVotos,
+            eixos: eixosFormatados,
+          });
+
+          setTimeout(() => {
+            const widths = {};
+            eixosFormatados.forEach((e) => {
+              e.propostas.forEach((p) => {
+                widths[`${e.id}-${p.titulo}`] = p.pct;
+              });
+            });
+            setBarWidths(widths);
+          }, 200);
+        })
+        .catch((err) => console.error('Erro ao carregar dashboard:', err))
+        .finally(() => setLoading(false));
+    };
+
+    carregarDados();
+
+    const intervalId = setInterval(carregarDados, 60000);
+
+    return () => clearInterval(intervalId);
   }, []);
 
   if (loading || !dados) {
@@ -69,7 +94,12 @@ export default function Dashboard() {
   return (
     <div className={`screen active ${styles.screen}`} id="screen-dashboard">
       <div className={styles.top}>
-        <div className={styles.brand}>
+        <div 
+          className={styles.brand} 
+          onClick={() => navigate('/')} 
+          style={{ cursor: 'pointer' }}
+          title="Voltar para a Home"
+        >
           ODS <em>Mogi</em> — Resultados
         </div>
         <div className={styles.liveDot}>Ao vivo</div>
@@ -92,42 +122,57 @@ export default function Dashboard() {
         </div>
 
         <div className={styles.grid}>
-          {dados.eixos.map((eixo) => (
-            <div key={eixo.id}>
-              <div className={styles.eixoLabel}>{eixo.num}</div>
-              <div className={styles.eixoTitle} style={{ color: eixo.cor }}>
-                {eixo.nome}
-              </div>
-              {eixo.propostas.map((proposta) => (
-                <div key={proposta.titulo} className={styles.barItem}>
-                  <div className={styles.barLabel}>
-                    <span className={styles.barLabelText}>
-                      {proposta.titulo}
-                    </span>
-                    <span className={styles.barLabelNum}>
-                      {`${proposta.votos} ${proposta.votos === 1 ? 'voto' : 'votos'}`}{' '}
-                      ({proposta.pct}%)
-                    </span>
-                  </div>
-                  <div className={styles.barTrack}>
-                    <div
-                      className={styles.barFill}
-                      style={{
-                        width: `${barWidths[`${eixo.id}-${proposta.titulo}`] ?? 0}%`,
-                        background: eixo.barCor,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
+          {dados.eixos.length === 0 ? (
+            <div style={{ gridColumn: '1 / -1', textAlign: 'center', color: 'rgba(255,255,255,0.4)', padding: '40px 0', fontStyle: 'italic' }}>
+              Nenhum eixo temático configurado para o evento.
             </div>
-          ))}
-        </div>
-
-        <div className={styles.backLink}>
-          <button className="btn btn-ghost" onClick={() => navigate('/')}>
-            ← Voltar ao início
-          </button>
+          ) : (
+            dados.eixos.map((eixo) => (
+              <div key={eixo.id} className={styles.eixoContainer}>
+                <div className={styles.eixoTitle} style={{ color: eixo.cor }}>
+                  {eixo.nome}
+                </div>
+                
+                <div className={styles.propostasList}>
+                  {/* Validação de Empty State para as propostas do eixo */}
+                  {eixo.propostas.length > 0 ? (
+                    eixo.propostas.map((proposta) => (
+                      <div key={proposta.titulo} className={styles.barItem}>
+                        <div className={styles.barLabel}>
+                          <span 
+                            className={styles.barLabelText}
+                            style={{ 
+                              color: proposta.isOutros ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.9)',
+                              fontStyle: proposta.isOutros ? 'italic' : 'normal'
+                            }}
+                          >
+                            {proposta.titulo}
+                          </span>
+                          <span className={styles.barLabelNum}>
+                            {`${proposta.votos} ${proposta.votos === 1 ? 'voto' : 'votos'}`}{' '}
+                            <span className={styles.pctText}>({proposta.pct}%)</span>
+                          </span>
+                        </div>
+                        <div className={styles.barTrack}>
+                          <div
+                            className={styles.barFill}
+                            style={{
+                              width: `${barWidths[`${eixo.id}-${proposta.titulo}`] ?? 0}%`,
+                              background: proposta.isOutros ? 'rgba(255, 255, 255, 0.15)' : eixo.barCor,
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <div style={{ color: 'rgba(255, 255, 255, 0.3)', fontStyle: 'italic', fontSize: '15px', padding: '16px 0' }}>
+                      Nenhuma proposta registrada neste eixo.
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>
