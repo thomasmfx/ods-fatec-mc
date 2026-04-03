@@ -16,7 +16,8 @@
   flex-shrink: 0;
 }
 
-.brand {
+.brand,
+.resultados {
   font-family: 'Fraunces', serif;
   font-size: 24px;
   color: #f0f0ea;
@@ -250,4 +251,36 @@
     font-size: 16px;
     text-align: left;
   }
+}
+
+.filtros {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filterBtn {
+  background: transparent;
+  border: 2px solid #9a9a9a;
+  color: #9a9a9a;
+  padding: 6px 16px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.filterBtnActive {
+  background: transparent;
+  border-color: #9fe1cb; /* Cor do "Ao vivo" e números */
+  color: #9fe1cb; /* Cor do texto em destaque */
+}
+
+.resultados {
+  margin-left: 0.35em;
+  position: absolute;
 }

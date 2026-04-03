@@ -24,6 +24,7 @@ public class SessaoService {
     private final ParticipanteRepository participanteRepo;
     private final OpcoesRepository opcoesRepo;
     private final JwtService jwtService;
+    
     @Value("${evento.ativo:true}")
     private Boolean eventoAtivo;
 
@@ -35,6 +36,10 @@ public class SessaoService {
         ParticipanteResumoDTO participante = participanteRepo
             .buscarResumoPorEmail(dto.email())
             .orElseThrow(ParticipanteNaoEncontradoException::new);
+
+        if (participanteRepo.verificarSeJaVotou(participante.id())) {
+            throw new RegraNegocioException("Este participante já registrou votos nesta conferência.");
+        }
 
         String token = jwtService.gerarToken(participante.id(), participante.email());
         return new SessaoResponseDTO(participante, token);

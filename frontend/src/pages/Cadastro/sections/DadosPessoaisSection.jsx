@@ -45,7 +45,7 @@ export default function DadosPessoaisSection({ form, handleChange }) {
       <div className="field" role="radiogroup">
         <span className="field-label">Data da conferência *</span>
         {[
-          { value: '2026-03-28', label: '28 de março de 2026 (Sábado)' },
+          // { value: '2026-03-28', label: '28 de março de 2026 (Sábado)' },
           { value: '2026-04-04', label: '04 de abril de 2026 (Sábado)' },
         ].map(({ value, label }) => (
           <div

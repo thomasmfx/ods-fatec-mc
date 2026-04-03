@@ -43,6 +43,13 @@ public class ParticipanteRepository {
         return count != null && count > 0;
     }
 
+    public boolean verificarSeJaVotou(int parId) {
+        Integer count = jdbc.queryForObject(
+            "SELECT COUNT(*) FROM VOTACOES WHERE vot_par_id = ?",
+            Integer.class, parId);
+        return count != null && count > 0;
+    }
+
     public int inserir(CadastroRequestDTO req) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbc.update(con -> {
@@ -68,7 +75,7 @@ public class ParticipanteRepository {
             ps.setInt(9, req.getOrientacaoSexualId());
             ps.setInt(10, req.getRacaCorId());
             ps.setInt(11, req.getCidadeId());
-            ps.setString(12, req.getCidadeOutro()); // ajusta o índice conforme sua query
+            ps.setString(12, req.getCidadeOutro()); 
             ps.setString(13, Boolean.TRUE.equals(req.getAutorizacaoImagem()) ? "S" : "N");
             ps.setInt(14, req.getRegiaoId());
             ps.setInt(15, req.getInstituicaoId());
@@ -85,7 +92,6 @@ public class ParticipanteRepository {
                 parId, eixoId);
         }
     }
-    // idem pra areas, publicos, cadeias, deficiencias
 
     public void inserirAreas(int parId, List<Integer> areaIds) {
       for (Integer areaId : areaIds) {
