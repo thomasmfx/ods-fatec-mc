@@ -1,6 +1,4 @@
--- Conversão de Oracle para MySQL
-
--- 1.a Tabelas de Domínio (Lookup Tables)
+-- Tabelas de Domínio (Lookup Tables)
 CREATE TABLE AREAS_FORMACAO (
     afm_id INT NOT NULL AUTO_INCREMENT,
     afm_nome VARCHAR(150) NOT NULL,
@@ -112,6 +110,7 @@ CREATE TABLE PROPOSTAS (
     prp_autor VARCHAR(200),
     prp_autor_email VARCHAR(300),
     prp_eos_id INT NOT NULL,
+    prp_data DATE NOT NULL DEFAULT '2026-04-04',
     CONSTRAINT PK_PRP PRIMARY KEY (prp_id),
     CONSTRAINT FK_PRP_EOS FOREIGN KEY (prp_eos_id) REFERENCES EIXOS_ODS (eos_id)
 );
@@ -125,6 +124,7 @@ CREATE TABLE VOTACOES (
     CONSTRAINT FK_VOT_PRP FOREIGN KEY (vot_prp_id) REFERENCES PROPOSTAS (prp_id)
 );
 
+-- Tabelas Associativas (N:N)
 CREATE TABLE DEFICIENCIAS_PARTICIPANTES (
     dfp_def_id INT NOT NULL,
     dfp_par_id INT NOT NULL,

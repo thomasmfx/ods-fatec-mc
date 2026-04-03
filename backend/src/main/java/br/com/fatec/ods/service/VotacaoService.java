@@ -24,8 +24,12 @@ public class VotacaoService {
 
     private final JdbcTemplate jdbcTemplate;
     private final CertificadoService certificadoService;
+    
     @Value("${evento.ativo:true}")
     private Boolean eventoAtivo;
+
+    @Value("${evento.data.atual}")
+    private String dataAtualEvento;
 
     @Transactional
     public VotacaoResponseDTO registrarVotos(Integer participanteId, VotacaoRequestDTO request) {
@@ -44,7 +48,9 @@ public class VotacaoService {
         }
 
         Integer qtdVotosExistentes = jdbcTemplate.queryForObject(
-                "SELECT COUNT(*) FROM VOTACOES WHERE vot_par_id = ?", Integer.class, participanteId);
+                "SELECT COUNT(*) FROM VOTACOES WHERE vot_par_id = ?", 
+                Integer.class, participanteId);
+                
         if (qtdVotosExistentes != null && qtdVotosExistentes > 0) {
             throw new IllegalStateException("Este participante já registrou votos nesta conferência.");
         }
@@ -53,11 +59,12 @@ public class VotacaoService {
             jdbcTemplate.update("UPDATE PARTICIPANTES SET par_mail = ? WHERE par_id = ?", request.email(), participanteId);
         }
 
-        LocalDate dataAtual = LocalDate.now();
+        LocalDate dataEvento = LocalDate.parse(dataAtualEvento);
+        
         for (VotoDTO voto : votos) {
             jdbcTemplate.update(
                     "INSERT INTO VOTACOES (vot_par_id, vot_prp_id, vot_data) VALUES (?, ?, ?)",
-                    participanteId, voto.propostaId(), dataAtual
+                    participanteId, voto.propostaId(), dataEvento
             );
         }
 

@@ -3,6 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './confirmacao.module.css';
 import Hero from '../../components/Hero';
 
+const DATA_EXTENSA = import.meta.env.VITE_DATA_EVENTO_FORMATADA_2 || "04 de abril de 2026";
+
 export default function Confirmacao() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -49,7 +51,7 @@ export default function Confirmacao() {
             <div className={styles.confIcon}>📅</div>
             <div className={styles.confRowBody}>
               <strong>Data de participação</strong>
-              <span>28 de março de 2026</span>
+              <span>{DATA_EXTENSA}</span>
             </div>
           </div>
         </div>
@@ -82,7 +84,7 @@ export default function Confirmacao() {
             <div className={styles.certDesc}>
               participou da Etapa Livre da 1ª Conferência Nacional ODS
               <br />
-              realizada na Fatec Mogi das Cruzes — 28 de março de 2026
+              realizada na Fatec Mogi das Cruzes — {DATA_EXTENSA}
             </div>
           </div>
         )}
@@ -114,11 +116,10 @@ export default function Confirmacao() {
             style={{
               background: 'none',
               border: 'none',
-              color: 'var(--text-muted)',
-              fontSize: '11px',
-              opacity: 0.35,
+              color: 'var(--green)',
+              fontSize: '12px',
               cursor: 'pointer',
-              letterSpacing: '0.05em',
+              letterSpacing: '0.05em'
             }}
           >
             Nova sessão

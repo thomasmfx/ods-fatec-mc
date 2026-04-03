@@ -17,13 +17,19 @@ export default function Dashboard() {
   const [dados, setDados] = useState(null);
   const [barWidths, setBarWidths] = useState({});
   const [loading, setLoading] = useState(true);
+  const [filtroData, setFiltroData] = useState(null);
 
+  // UNIFICAMOS AQUI: Apenas um useEffect que observa o filtroData
   useEffect(() => {
     const carregarDados = () => {
+      // Monta a URL dependendo se há filtro ou não
+      const url = filtroData ? `/dashboard?data=${filtroData}` : '/dashboard';
+
       api
-        .get('/dashboard')
+        .get(url)
         .then((res) => {
-          const { totalParticipantes, totalVotos, eixos } = res.data;
+          // Usamos as variáveis novas do backend atualizado
+          const { totalInscritos, totalVotantes, totalVotos, eixos } = res.data;
 
           const eixosFormatados = eixos.map((eixo, i) => {
             const theme = THEMES[i % THEMES.length];
@@ -38,14 +44,14 @@ export default function Dashboard() {
 
             let propostasParaExibir = [];
 
-            if (sortedPropostas.length > 3) {
-              const top3 = sortedPropostas.slice(0, 3);
+            if (sortedPropostas.length > 4) {
+              const top4 = sortedPropostas.slice(0, 4);
               const votosRestantes = sortedPropostas
-                .slice(3)
+                .slice(4)
                 .reduce((acc, p) => acc + p.votos, 0);
 
               propostasParaExibir = [
-                ...top3,
+                ...top4,
                 {
                   titulo: 'Outras propostas',
                   votos: votosRestantes,
@@ -69,7 +75,8 @@ export default function Dashboard() {
           });
 
           setDados({
-            totalParticipantes,
+            totalInscritos,
+            totalVotantes,
             totalVotos,
             eixos: eixosFormatados,
           });
@@ -82,18 +89,21 @@ export default function Dashboard() {
               });
             });
             setBarWidths(widths);
-          }, 200);
+          }, 100);
         })
         .catch((err) => console.error('Erro ao carregar dashboard:', err))
         .finally(() => setLoading(false));
     };
 
+    // Executa ao carregar e sempre que o filtroData mudar
     carregarDados();
 
+    // Define o timer de atualização em tempo real
     const intervalId = setInterval(carregarDados, 60000);
 
+    // Limpa o timer anterior se o usuário mudar de aba antes dos 60 segundos
     return () => clearInterval(intervalId);
-  }, []);
+  }, [filtroData]); // <-- A MÁGICA ESTÁ AQUI: o array de dependências agora observa o filtroData
 
   if (loading || !dados) {
     return (
@@ -113,7 +123,29 @@ export default function Dashboard() {
           style={{ cursor: 'pointer' }}
           title="Voltar para a Home"
         >
-          ODS <em>Mogi</em> — Resultados
+          ODS <em>Mogi</em> <span className={styles.resultados}>— Resultados</span>
+        </div>
+        <div className={styles.filtros}>
+          <button 
+            className={`${styles.filterBtn} ${filtroData === '2026-03-28' ? styles.filterBtnActive : ''}`}
+            onClick={() => setFiltroData('2026-03-28')}
+          >
+            28/03
+          </button>
+          
+          <button 
+            className={`${styles.filterBtn} ${filtroData === '2026-04-04' ? styles.filterBtnActive : ''}`}
+            onClick={() => setFiltroData('2026-04-04')}
+          >
+            04/04
+          </button>
+          
+          <button 
+            className={`${styles.filterBtn} ${!filtroData ? styles.filterBtnActive : ''}`}
+            onClick={() => setFiltroData('')}
+          >
+            Visão Geral
+          </button>
         </div>
         <div className={styles.liveDot}>Ao vivo</div>
       </div>
@@ -121,16 +153,18 @@ export default function Dashboard() {
       <div className={styles.scroll}>
         <div className={styles.stats}>
           <div className={styles.statCard}>
-            <div className={styles.statNum}>{dados.totalParticipantes}</div>
-            <div className={styles.statLabel}>PARTICIPANTES</div>
+            <div className={styles.statNum}>{dados.totalInscritos || 0}</div>
+            <div className={styles.statLabel}>INSCRITOS</div>
           </div>
+          
           <div className={styles.statCard}>
-            <div className={styles.statNum}>{dados.totalVotos}</div>
+            <div className={styles.statNum}>{dados.totalVotantes || 0}</div>
+            <div className={styles.statLabel}>VOTANTES</div>
+          </div>
+          
+          <div className={styles.statCard}>
+            <div className={styles.statNum}>{dados.totalVotos || 0}</div>
             <div className={styles.statLabel}>VOTOS REGISTRADOS</div>
-          </div>
-          <div className={styles.statCard}>
-            <div className={styles.statNum}>{dados.eixos.length}</div>
-            <div className={styles.statLabel}>EIXOS TEMÁTICOS</div>
           </div>
         </div>
 
@@ -155,7 +189,6 @@ export default function Dashboard() {
                 </div>
 
                 <div className={styles.propostasList}>
-                  {/* Validação de Empty State para as propostas do eixo */}
                   {eixo.propostas.length > 0 ? (
                     eixo.propostas.map((proposta) => (
                       <div key={proposta.titulo} className={styles.barItem}>
@@ -202,7 +235,7 @@ export default function Dashboard() {
                         padding: '16px 0',
                       }}
                     >
-                      Nenhuma proposta registrada neste eixo.
+                      Nenhuma proposta ativa registrada neste eixo.
                     </div>
                   )}
                 </div>
