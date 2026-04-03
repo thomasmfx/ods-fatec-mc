@@ -17,6 +17,11 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ParticipanteNaoEncontradoException.class)
     public ResponseEntity<ErroDTO> handleParticipanteNaoEncontrado(ParticipanteNaoEncontradoException ex) {
-        return ResponseEntity.status(404).body(new ErroDTO("participante_nao_encontrado", ex.getMessage()));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErroDTO("participante_nao_encontrado", ex.getMessage()));
+    }
+
+    @ExceptionHandler(RegraNegocioException.class)
+    public ResponseEntity<ErroDTO> handleRegraNegocio(RegraNegocioException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErroDTO("regra_negocio", ex.getMessage()));
     }
 }
