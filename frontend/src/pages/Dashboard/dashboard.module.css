@@ -255,18 +255,18 @@
 
 .filtros {
   display: flex;
-  gap: 12px; 
+  gap: 12px;
   justify-content: center;
   align-items: center;
-  flex-wrap: wrap; 
+  flex-wrap: wrap;
 }
 
 .filterBtn {
   background: transparent;
-  border: 2px solid #9a9a9a; 
-  color: #9a9a9a; 
+  border: 2px solid #9a9a9a;
+  color: #9a9a9a;
   padding: 6px 16px;
-  border-radius: 20px; 
+  border-radius: 20px;
   font-size: 13px;
   font-weight: 500;
   cursor: pointer;

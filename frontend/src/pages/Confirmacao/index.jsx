@@ -3,7 +3,8 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './confirmacao.module.css';
 import Hero from '../../components/Hero';
 
-const DATA_EXTENSA = import.meta.env.VITE_DATA_EVENTO_FORMATADA_2 || "04 de abril de 2026";
+const DATA_EXTENSA =
+  import.meta.env.VITE_DATA_EVENTO_FORMATADA_2 || '04 de abril de 2026';
 
 export default function Confirmacao() {
   const navigate = useNavigate();
@@ -119,7 +120,7 @@ export default function Confirmacao() {
               color: 'var(--green)',
               fontSize: '12px',
               cursor: 'pointer',
-              letterSpacing: '0.05em'
+              letterSpacing: '0.05em',
             }}
           >
             Nova sessão

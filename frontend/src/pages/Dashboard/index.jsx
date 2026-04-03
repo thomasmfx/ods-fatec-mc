@@ -123,24 +123,25 @@ export default function Dashboard() {
           style={{ cursor: 'pointer' }}
           title="Voltar para a Home"
         >
-          ODS <em>Mogi</em> <span className={styles.resultados}>— Resultados</span>
+          ODS <em>Mogi</em>{' '}
+          <span className={styles.resultados}>— Resultados</span>
         </div>
         <div className={styles.filtros}>
-          <button 
+          <button
             className={`${styles.filterBtn} ${filtroData === '2026-03-28' ? styles.filterBtnActive : ''}`}
             onClick={() => setFiltroData('2026-03-28')}
           >
             28/03
           </button>
-          
-          <button 
+
+          <button
             className={`${styles.filterBtn} ${filtroData === '2026-04-04' ? styles.filterBtnActive : ''}`}
             onClick={() => setFiltroData('2026-04-04')}
           >
             04/04
           </button>
-          
-          <button 
+
+          <button
             className={`${styles.filterBtn} ${!filtroData ? styles.filterBtnActive : ''}`}
             onClick={() => setFiltroData('')}
           >
@@ -156,12 +157,12 @@ export default function Dashboard() {
             <div className={styles.statNum}>{dados.totalInscritos || 0}</div>
             <div className={styles.statLabel}>INSCRITOS</div>
           </div>
-          
+
           <div className={styles.statCard}>
             <div className={styles.statNum}>{dados.totalVotantes || 0}</div>
             <div className={styles.statLabel}>VOTANTES</div>
           </div>
-          
+
           <div className={styles.statCard}>
             <div className={styles.statNum}>{dados.totalVotos || 0}</div>
             <div className={styles.statLabel}>VOTOS REGISTRADOS</div>

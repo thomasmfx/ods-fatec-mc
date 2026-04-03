@@ -48,7 +48,9 @@ export default function Votacao() {
   if (loading) return <Loading texto="Carregando propostas..." />;
 
   // VERIFICAÇÃO DE FALLBACK: Todos os eixos devem ter pelo menos 1 proposta
-  const votacaoPronta = eixos.length > 0 && eixos.every(e => e.propostas && e.propostas.length > 0);
+  const votacaoPronta =
+    eixos.length > 0 &&
+    eixos.every((e) => e.propostas && e.propostas.length > 0);
 
   if (!votacaoPronta) {
     return (
@@ -69,24 +71,42 @@ export default function Votacao() {
             {participante.nome || 'Participante'}
           </div>
         </div>
-        
-        <div style={{ 
-          padding: '60px 24px', 
-          textAlign: 'center', 
-          display: 'flex', 
-          flexDirection: 'column', 
-          alignItems: 'center',
-          justifyContent: 'center',
-          height: 'calc(100vh - 60px)'
-        }}>
-          <h2 style={{ fontFamily: '"Fraunces", serif', fontSize: '24px', color: 'var(--green)', marginBottom: '16px' }}>
+
+        <div
+          style={{
+            padding: '60px 24px',
+            textAlign: 'center',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: 'calc(100vh - 60px)',
+          }}
+        >
+          <h2
+            style={{
+              fontFamily: '"Fraunces", serif',
+              fontSize: '24px',
+              color: 'var(--green)',
+              marginBottom: '16px',
+            }}
+          >
             Votação em Preparação
           </h2>
-          <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: '1.6', maxWidth: '320px', marginBottom: '32px' }}>
-            As propostas para esta etapa ainda estão sendo elaboradas. Por favor, aguarde a liberação e faça o check-in novamente.
+          <p
+            style={{
+              color: 'var(--text-muted)',
+              fontSize: '15px',
+              lineHeight: '1.6',
+              maxWidth: '320px',
+              marginBottom: '32px',
+            }}
+          >
+            As propostas para esta etapa ainda estão sendo elaboradas. Por
+            favor, aguarde a liberação e faça o check-in novamente.
           </p>
-          <button 
-            className="btn btn-primary" 
+          <button
+            className="btn btn-primary"
             onClick={() => {
               navigate('/');
               sessionStorage.clear();
